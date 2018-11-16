@@ -17,6 +17,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('/test', function () {
-    echo "test";
-});
+Route::get('/test','Testing@test');
