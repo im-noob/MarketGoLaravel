@@ -4,7 +4,10 @@ namespace App\Http\Controllers\API\MarketS;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\User; 
+use Illuminate\Support\Facades\Auth; 
+use Validator;
+use Illuminate\Support\Facades\DB;
 class Profile_C extends Controller
 {
     public $successStatus = 200;
@@ -48,12 +51,55 @@ class Profile_C extends Controller
         //         pincode=>pincode,
         //         address=>address,
         //         state=>state,
+
         $request_data = $request->json()->all();
+        $id = $request_data['userID'];
+
+        DB::table('wor_info_tab')->where('wor_info_id', $id)
+            ->update([
+              'name' => $request_data['name'],
+              'state' => $request_data['state'],
+              'city' => $request_data['city'],
+              'pin_code' => $request_data['pincode'],
+              'address' => $request_data['address'],
+            ]);
+        DB::table('users')->where('id', $id)
+            ->update([
+              'phone' => $request_data['phoneno'],
+            ]);
         return response()->json(['data' => "saved",'verify'=>$request_data], $this-> successStatus);  
     }
     //update work info
     function update_work_info(Request $request){
+      // workingHour:workingHourSend,
+      //               expYear:this.state.expYear,
+      //               workList:this.state.workList,
     	$request_data = $request->json()->all();
-        return response()->json(['data' => "saved",'verify'=>$request_data], $this-> successStatus); 
+        $id = $request_data['userID'];
+      //sending data wor info table 
+      DB::table('wor_info_tab')->where('wor_info_id', $id)
+            ->update([
+              'work_hour' => $request_data['workingHour'],
+              'work_exp' => $request_data['expYear'],
+            ]);
+      
+
+      //deleting each row with the id in wor rate table
+      DB::table('wor_rate_tab')->where('wor_info_id', '=', $id)->delete();
+
+      //inserting data to wor rate table 
+      $price = $request_data['workList'];
+      $temp_price = [];
+      foreach ($price as $key => $value) {
+        $arr = [  
+              'wor_info_id' => $id,
+              'wor_list_id' => $value['work'],
+              'min_price' =>  explode('-', $value['price'])[0],
+              'max_price' =>  explode('-',$value['price'])[1]
+        ];
+          array_push($temp_price,$arr);
+      }
+      DB::table('wor_rate_tab')->insert($temp_price);
+      return response()->json(['data' => "saved",'verify'=>$request_data], $this-> successStatus); 
     }
 }
