@@ -24,9 +24,9 @@ class Profile_C extends Controller
                 "contract"=>"205",
                 "ratting"=>"4.9",
                 "items0"=>[
-                  ['work'=>'Wire Man','price'=>'300-600','list_id'=>'1'],
-                  ['work'=>'Warring','price'=>'1000-1200','list_id'=>'2'],
-                  ['work'=>'Fan Repair','price'=>'250-550','list_id'=>'3'],
+                  ['work'=>'1','price'=>'300-600','list_id'=>'1'],
+                  ['work'=>'2','price'=>'1000-1200','list_id'=>'2'],
+                  ['work'=>'3','price'=>'250-550','list_id'=>'3'],
                   ['work'=>'Tv Repair','price'=>'1800-6000','list_id'=>'4'],
                   ['work'=>'Washing Machine Repair','price'=>'2600-6600','list_id'=>'5'],
                 ],
@@ -93,7 +93,7 @@ class Profile_C extends Controller
       foreach ($price as $key => $value) {
         $arr = [  
               'wor_info_id' => $id,
-              'wor_list_id' => $value['work'],
+              'wor_subcat_id' => $value['work'],
               'min_price' =>  explode('-', $value['price'])[0],
               'max_price' =>  explode('-',$value['price'])[1]
         ];

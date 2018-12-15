@@ -59,7 +59,7 @@ class UserController extends Controller
                 $temp_price = [];
                 foreach ($wor_rate_tab as $key => $value) {
                   $arr = [  
-                        'work' => $value->wor_list_id,
+                        'work' => $value->wor_subcat_id,
                         'price' => $value->min_price."-".$value->max_price,
                         'list_id' => $i,
                   ];
@@ -163,9 +163,9 @@ class UserController extends Controller
                 "contract"=>"0",
                 "ratting"=>"0",
                 "items0"=>[
-                  ['work'=>'work1','price'=>'300-600','list_id'=>'1'],
-                  ['work'=>'work2','price'=>'1000-1200','list_id'=>'2'],
-                  ['work'=>'work3','price'=>'250-550','list_id'=>'3']
+                  ['work'=>'1','price'=>'300-600','list_id'=>'1'],
+                  ['work'=>'2','price'=>'1000-1200','list_id'=>'2'],
+                  ['work'=>'3','price'=>'250-550','list_id'=>'3']
                 ],
                 "items1"=> [
                   ['A'=>'Work Experience(In year)','B'=>'3'],
@@ -206,7 +206,7 @@ class UserController extends Controller
             foreach ($price as $key => $value) {
               $arr = [  
                     'wor_info_id' => $wor_info_id[0]->id,
-                    'wor_list_id' => $value['work'],
+                    'wor_subcat_id' => $value['work'],
                     'min_price' =>  explode('-', $value['price'])[0],
                     'max_price' =>  explode('-',$value['price'])[1]
               ];
