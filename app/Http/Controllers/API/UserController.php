@@ -62,6 +62,8 @@ class UserController extends Controller
                         'work' => $value->wor_subcat_id,
                         'price' => $value->min_price."-".$value->max_price,
                         'list_id' => $i,
+                        'category' => 1,
+                        'work_name' => 'name'.$i,
                   ];
                   $i = $i + 1;
                   array_push($temp_price,$arr);
