@@ -105,44 +105,32 @@ class Profile_C extends Controller
     // for category and subcategory
     function get_cat_subCatForWork(Request $request)
     {
-      $data = [
-                [
-                    "category"=>"computer","subcategory"=>[
-                        ["value"=>"Hard Disk1","key"=>"1"],
-                        ["value"=>"CUP finshing1","key"=>"2"],
-                        ["value"=>"Fan reparing1","key"=>"3"],
-                        ["value"=>"Mother Board repring1","key"=>"4"],
-                        ["value"=>"Spari part reparing1","key"=>"5"],
-                    ],
-                ],
-                [
-                    "category"=>"Tranport","subcategory"=>[
-                        ["value"=>"Hard Disk2","key"=>"6"],
-                        ["value"=>"CUP finshing2","key"=>"7"],
-                        ["value"=>"Fan reparing2","key"=>"8"],
-                        ["value"=>"Mother Board repring2","key"=>"9"],
-                        ["value"=>"Spari part reparing2","key"=>"10"],
-                    ],
-                ],
-                [
-                    "category"=>"Electrics","subcategory"=>[
-                        ["value"=>"Hard Disk3","key"=>"11"],
-                        ["value"=>"CUP finshing3","key"=>"12"],
-                        ["value"=>"Fan reparing3","key"=>"13"],
-                        ["value"=>"Mother Board repring3","key"=>"14"],
-                        ["value"=>"Spari part reparing","key"=>"15"],
-                    ],
-                ],
-                [
-                    "category"=>"vechical","subcategory"=>[
-                        ["value"=>"superHard DISk","key"=>"16"],
-                        ["value"=>"CUP finshing4","key"=>"17"],
-                        ["value"=>"Fan reparing4","key"=>"18"],
-                        ["value"=>"Mother Board repring4","key"=>"19"],
-                        ["value"=>"Spari part reparing4","key"=>"20"],
-                    ],
-                ]
-            ];
-      return response()->json(['data'=>$data],$this->successStatus);
+
+
+       $category_list = DB::table('wor_cat_tab')
+            ->select('wor_cat_name','wor_cat_id')
+            ->get();
+        // SELECT wor_cat_name FROM `wor_cat_tab`SELECT * FROM `wor_subcat_tab
+        $cat_sub_cat_arr_final = [];
+        foreach ($category_list as $key => $value) {
+            $subcategory_list = DB::table('wor_subcat_tab')
+                ->select('wor_subcat_id','subcat_name')
+                ->where('wor_cat_id',$value->wor_cat_id)
+                ->get();
+            // echo($value->wor_cat_name. "=>" );
+            $intermediateArr = [];
+            $subcategory_arr = [];
+            foreach ($subcategory_list as $key => $subcategory) {
+                $tmp = [];
+                $tmp["key"] = $subcategory->wor_subcat_id;
+                $tmp["value"] = $subcategory->subcat_name;
+                array_push($subcategory_arr, $tmp);
+            }
+            
+            $intermediateArr["category"] = $value->wor_cat_name;
+            $intermediateArr["subcategory"] = $subcategory_arr;
+            array_push($cat_sub_cat_arr_final, $intermediateArr);
+        }
+      return response()->json(['data'=>$cat_sub_cat_arr_final],$this->successStatus);
     }
 }

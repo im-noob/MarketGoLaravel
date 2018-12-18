@@ -49,9 +49,10 @@ class UserController extends Controller
                 
 
                 //work rate table featching 
-                $wor_rate_tab = DB::table('wor_rate_tab')->select()
-                                ->where('wor_info_id', '=', $wor_info_id[0]->id)
-                                ->get();
+                $wor_rate_tab = DB::table('wor_rate_tab')
+                        ->join('wor_subcat_tab', 'wor_subcat_tab.wor_subcat_id', '=', 'wor_rate_tab.wor_subcat_id')
+                        ->where('wor_info_id', '=', 55)
+                        ->get();
 
 
                 //making a aaray for item0
@@ -62,8 +63,8 @@ class UserController extends Controller
                         'work' => $value->wor_subcat_id,
                         'price' => $value->min_price."-".$value->max_price,
                         'list_id' => $i,
-                        'category' => 1,
-                        'work_name' => 'name'.$i,
+                        'category' => $value->wor_subcat_id,
+                        'work_name' => $value->subcat_name,
                   ];
                   $i = $i + 1;
                   array_push($temp_price,$arr);
