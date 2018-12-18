@@ -102,4 +102,47 @@ class Profile_C extends Controller
       DB::table('wor_rate_tab')->insert($temp_price);
       return response()->json(['data' => "saved",'verify'=>$request_data], $this-> successStatus); 
     }
+    // for category and subcategory
+    function get_cat_subCatForWork(Request $request)
+    {
+      $data = [
+                [
+                    "category"=>"computer","subcategory"=>[
+                        ["value"=>"Hard Disk1","key"=>"1"],
+                        ["value"=>"CUP finshing1","key"=>"2"],
+                        ["value"=>"Fan reparing1","key"=>"3"],
+                        ["value"=>"Mother Board repring1","key"=>"4"],
+                        ["value"=>"Spari part reparing1","key"=>"5"],
+                    ],
+                ],
+                [
+                    "category"=>"Tranport","subcategory"=>[
+                        ["value"=>"Hard Disk2","key"=>"6"],
+                        ["value"=>"CUP finshing2","key"=>"7"],
+                        ["value"=>"Fan reparing2","key"=>"8"],
+                        ["value"=>"Mother Board repring2","key"=>"9"],
+                        ["value"=>"Spari part reparing2","key"=>"10"],
+                    ],
+                ],
+                [
+                    "category"=>"Electrics","subcategory"=>[
+                        ["value"=>"Hard Disk3","key"=>"11"],
+                        ["value"=>"CUP finshing3","key"=>"12"],
+                        ["value"=>"Fan reparing3","key"=>"13"],
+                        ["value"=>"Mother Board repring3","key"=>"14"],
+                        ["value"=>"Spari part reparing","key"=>"15"],
+                    ],
+                ],
+                [
+                    "category"=>"vechical","subcategory"=>[
+                        ["value"=>"superHard DISk","key"=>"16"],
+                        ["value"=>"CUP finshing4","key"=>"17"],
+                        ["value"=>"Fan reparing4","key"=>"18"],
+                        ["value"=>"Mother Board repring4","key"=>"19"],
+                        ["value"=>"Spari part reparing4","key"=>"20"],
+                    ],
+                ]
+            ];
+      return response()->json(['data'=>$data],$this->successStatus);
+    }
 }
