@@ -17,8 +17,8 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::post('login', 'API\UserController@login'); 
-Route::post('register', 'API\UserController@register');
+Route::post('login', 'API\MarketS\UserController@login'); 
+Route::post('register', 'API\MarketS\UserController@register');
 Route::group(['middleware' => 'auth:api'], function(){
 	// Route::post('details', 'API\UserController@details');
 	Route::post('run_query', 'API\UserController@details');

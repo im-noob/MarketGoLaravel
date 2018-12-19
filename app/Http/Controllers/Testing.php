@@ -11,28 +11,33 @@ use Illuminate\Support\Facades\DB;
 class Testing extends Controller
 {
     function test(){
-         $wor_rate_tab = DB::table('wor_rate_tab')
-                        ->join('wor_subcat_tab', 'wor_subcat_tab.wor_subcat_id', '=', 'wor_rate_tab.wor_subcat_id')
-                        ->where('wor_info_id', '=', 55)
-                        ->get();
+          $data["status"] = true;
 
-
-        //making a aaray for item0
-        $i = 1; 
-        $temp_price = [];
-        foreach ($wor_rate_tab as $key => $value) {
-          $arr = [  
-                'work' => $value->wor_subcat_id,
-                'price' => $value->min_price."-".$value->max_price,
-                'list_id' => $i,
-                'category' => $value->wor_subcat_id,
-                'work_name' => $value->subcat_name,
-          ];
-          $i = $i + 1;
-          array_push($temp_price,$arr);
+        $email = 'aaravonly4you@gmail.com';
+        $countArr = DB::table('users')
+            ->select('email')
+            ->where('email',$email)
+            ->get();
+        if(sizeof($countArr)>0){
+          $data["status"] = false;
         }
 
-        $json = response()->json($temp_price);
+        $json = response()->json($data);
+        var_dump($json->original);
+        // echo "$json";
+
+          $data["status"] = true;
+
+        $email = 'paoopo@gmail.com';
+        $countArr = DB::table('users')
+        ->select('email')
+        ->where('email',$email)
+        ->get();
+        if(sizeof($countArr)>0){
+          $data["status"] = false;
+        }
+
+        $json = response()->json($data);
         var_dump($json->original);
         // echo "$json";
 

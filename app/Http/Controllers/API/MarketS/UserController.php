@@ -25,36 +25,25 @@ class UserController extends Controller
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
 
-
-
-
-
-
-        // work info id fratching 
-        $wor_info_id = DB::table('users')->select('id','phone')
-                  ->where('email', '=', $email)
-                  ->get();
-        //sending data according to user type
+            // work info id fratching 
+            $wor_info_id = DB::table('users')->select('id','phone')
+                      ->where('email', '=', $email)
+                      ->get();
+            //sending data according to user type
 
 
             if($user_type == 'worker'){
                 //featching profile data 
-                
-
                 //work info table data 
                 $wor_info_tab = DB::table('wor_info_tab')->select()
                                 ->where('wor_info_id', '=', $wor_info_id[0]->id)
                                 ->get();
                 // var_dump($wor_info_tab);
-                
-
                 //work rate table featching 
                 $wor_rate_tab = DB::table('wor_rate_tab')
                         ->join('wor_subcat_tab', 'wor_subcat_tab.wor_subcat_id', '=', 'wor_rate_tab.wor_subcat_id')
-                        ->where('wor_info_id', '=', 55)
+                        ->where('wor_info_id', '=', $wor_info_id[0]->id)
                         ->get();
-
-
                 //making a aaray for item0
                 $i = 1; 
                 $temp_price = [];
@@ -63,6 +52,7 @@ class UserController extends Controller
                         'work' => $value->wor_subcat_id,
                         'price' => $value->min_price."-".$value->max_price,
                         'list_id' => $i,
+                        // buts its sub category id name is category but
                         'category' => $value->wor_subcat_id,
                         'work_name' => $value->subcat_name,
                   ];
@@ -96,18 +86,7 @@ class UserController extends Controller
             }else{
                 $data = "NOt Configure your controller in user controller line no 83";
             }
-
-
-
-
-
-
-
-
-
-
             return response()->json(['success' => $success,'profileData' => $data,'userID'=>$wor_info_id[0]->id,'status' => 'valid'], $this-> successStatus);
-            
         } 
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
@@ -166,9 +145,10 @@ class UserController extends Controller
                 "contract"=>"0",
                 "ratting"=>"0",
                 "items0"=>[
-                  ['work'=>'1','price'=>'300-600','list_id'=>'1'],
-                  ['work'=>'2','price'=>'1000-1200','list_id'=>'2'],
-                  ['work'=>'3','price'=>'250-550','list_id'=>'3']
+                  ['work'=>'5','price'=>'300-600','list_id'=>'1','category'=>'5','work_name'=>'Computer & Laptops'],
+                  
+                  ['work'=>'3','price'=>'250-550','list_id'=>'2','category'=>'3','work_name'=>'Electronic appliances'],
+                  ['work'=>'12','price'=>'1000-1200','list_id'=>'3','category'=>'12','work_name'=>'Misc Services']
                 ],
                 "items1"=> [
                   ['A'=>'Work Experience(In year)','B'=>'3'],
