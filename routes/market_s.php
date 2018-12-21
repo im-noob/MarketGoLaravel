@@ -8,6 +8,10 @@ Route::post('register_S', 'API\MarketS\UserController@register');
 Route::post('AvilEmail', 'API\MarketS\UserController@avilEmail');
 Route::post('AvilPhone', 'API\MarketS\UserController@avilPhone');
 
+Route::post('send_OTP_S', 'API\MarketS\UserController@send_OTP_fun');
+Route::post('change_password_S', 'API\MarketS\UserController@change_password_fun');
+
+
 Route::group(['middleware' => 'auth:api'], function(){
 	
 	//for home

@@ -256,6 +256,18 @@ class UserController extends Controller
       }
       return response()->json(['data' => $data], $this-> successStatus);
     }
+    public function send_OTP_fun(Request $request)
+    {
+      $data['sendOTP'] = 'yes';
+      $reveiced = $request->json()->all();
+      return response()->json(['data'=>$data,'feedback'=>$reveiced]);
+    }
+    public function change_password_fun(Request $request)
+    {
+      $data['changed'] = 'yes';
+      $reveiced = $request->json()->all();
+      return response()->json(['data'=>$data,'feedback'=>$reveiced]);
+    }
 } 
 
 
