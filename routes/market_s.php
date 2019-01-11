@@ -1,4 +1,19 @@
 <?php
+
+/*  Makret User login   MU*/ 
+
+Route::post('login_MU', 'API\Groceries\LoginSignUP@login'); 
+Route::post('register_MU', 'API\Groceries\LoginSignUP@register');
+Route::post('AvilEmail_MU', 'API\Groceries\LoginSignUP@avilEmail');
+Route::post('AvilPhone_MU', 'API\Groceries\LoginSignUP@avilPhone');
+
+Route::post('send_OTP_MU', 'API\Groceries\LoginSignUP@send_OTP_fun');
+Route::post('change_password_MU', 'API\Groceries\LoginSignUP@change_password_fun');
+
+
+
+
+
 /****** market s ***/
 
 

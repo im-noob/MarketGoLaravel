@@ -1,0 +1,2 @@
+SELECT gro_shop_info_tab.name,gro_shop_info_tab.city,gro_shop_info_tab.address,gro_shop_info_tab.gro_shop_info_id,gro_shop_info_tab.state,gro_product_shop_tab.offer,gro_product_shop_tab.gro_price,gro_product_shop_tab.gro_product_shop_id FROM `gro_product_shop_tab` INNER JOIN gro_shop_info_tab ON gro_shop_info_tab.gro_shop_info_id=gro_product_shop_tab.gro_shop_info_id WHERE gro_product_shop_tab.gro_map_id=45
+SELECT * FROM gro_product_shop_tab WHERE gro_map_id = 45

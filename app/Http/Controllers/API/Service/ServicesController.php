@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Service;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller; 
-use App\User; 
-use Illuminate\Support\Facades\Auth; 
-use Validator;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-class Testing extends Controller
+
+class ServicesController extends Controller
 {
-    function test(){
-          $category_list = DB::table('wor_cat_tab')
+    public $successStatus = 200;
+
+    public function Cat_SubCat_Json(Request $request) 
+    {
+    	$category_list = DB::table('wor_cat_tab')
             ->select('wor_cat_name','wor_cat_id')
             ->get();
         // SELECT wor_cat_name FROM `wor_cat_tab`SELECT * FROM `wor_subcat_tab
@@ -35,11 +36,6 @@ class Testing extends Controller
             $intermediateArr["subcategory"] = $subcategory_arr;
             array_push($cat_sub_cat_arr_final, $intermediateArr);
         }
-
-        $json = response()->json($cat_sub_cat_arr_final);
-        // var_dump($json->original);
-        echo "$json";
-
-
+      	return response()->json(['data'=>$cat_sub_cat_arr_final],$this->successStatus);
     }
 }
