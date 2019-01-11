@@ -1,7 +1,9 @@
 <?php
-// include_once(__DIR__.'/market_s.php');
+
 use Illuminate\Http\Request;
 include_once(__DIR__.'/Grocery.php');
+include_once(__DIR__.'/Restaurant.php');
+include_once(__DIR__.'/Services.php');
 /* 
 |--------------------------------------------------------------------------
 | API Routes
