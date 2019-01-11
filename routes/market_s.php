@@ -1,5 +1,31 @@
 <?php
+
+/*  Makret User login   MU*/ 
+
+Route::post('login_MU', 'API\Groceries\LoginSignUP@login'); 
+Route::post('register_MU', 'API\Groceries\LoginSignUP@register');
+Route::post('AvilEmail_MU', 'API\Groceries\LoginSignUP@avilEmail');
+Route::post('AvilPhone_MU', 'API\Groceries\LoginSignUP@avilPhone');
+
+Route::post('send_OTP_MU', 'API\Groceries\LoginSignUP@send_OTP_fun');
+Route::post('change_password_MU', 'API\Groceries\LoginSignUP@change_password_fun');
+
+
+
+
+
 /****** market s ***/
+
+
+
+Route::post('login_S', 'API\MarketS\UserController@login'); 
+Route::post('register_S', 'API\MarketS\UserController@register');
+Route::post('AvilEmail', 'API\MarketS\UserController@avilEmail');
+Route::post('AvilPhone', 'API\MarketS\UserController@avilPhone');
+
+Route::post('send_OTP_S', 'API\MarketS\UserController@send_OTP_fun');
+Route::post('change_password_S', 'API\MarketS\UserController@change_password_fun');
+
 
 Route::group(['middleware' => 'auth:api'], function(){
 	
@@ -11,4 +37,6 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::post('postProfileData', 'API\MarketS\Profile_C@profile_getdata');
 	Route::post('updateProfileInfo', 'API\MarketS\Profile_C@update_profile_info');
 	Route::post('updateWorkInfo', 'API\MarketS\Profile_C@update_work_info');
+	Route::post('get_cat_subCat', 'API\MarketS\Profile_C@get_cat_subCatForWork');
+	// AvilEmailorPhone
 });

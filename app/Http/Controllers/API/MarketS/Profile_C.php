@@ -24,9 +24,9 @@ class Profile_C extends Controller
                 "contract"=>"205",
                 "ratting"=>"4.9",
                 "items0"=>[
-                  ['work'=>'Wire Man','price'=>'300-600','list_id'=>'1'],
-                  ['work'=>'Warring','price'=>'1000-1200','list_id'=>'2'],
-                  ['work'=>'Fan Repair','price'=>'250-550','list_id'=>'3'],
+                  ['work'=>'1','price'=>'300-600','list_id'=>'1'],
+                  ['work'=>'2','price'=>'1000-1200','list_id'=>'2'],
+                  ['work'=>'3','price'=>'250-550','list_id'=>'3'],
                   ['work'=>'Tv Repair','price'=>'1800-6000','list_id'=>'4'],
                   ['work'=>'Washing Machine Repair','price'=>'2600-6600','list_id'=>'5'],
                 ],
@@ -93,7 +93,7 @@ class Profile_C extends Controller
       foreach ($price as $key => $value) {
         $arr = [  
               'wor_info_id' => $id,
-              'wor_list_id' => $value['work'],
+              'wor_subcat_id' => $value['work'],
               'min_price' =>  explode('-', $value['price'])[0],
               'max_price' =>  explode('-',$value['price'])[1]
         ];
@@ -101,5 +101,36 @@ class Profile_C extends Controller
       }
       DB::table('wor_rate_tab')->insert($temp_price);
       return response()->json(['data' => "saved",'verify'=>$request_data], $this-> successStatus); 
+    }
+    // for category and subcategory
+    function get_cat_subCatForWork(Request $request)
+    {
+
+
+       $category_list = DB::table('wor_cat_tab')
+            ->select('wor_cat_name','wor_cat_id')
+            ->get();
+        // SELECT wor_cat_name FROM `wor_cat_tab`SELECT * FROM `wor_subcat_tab
+        $cat_sub_cat_arr_final = [];
+        foreach ($category_list as $key => $value) {
+            $subcategory_list = DB::table('wor_subcat_tab')
+                ->select('wor_subcat_id','subcat_name')
+                ->where('wor_cat_id',$value->wor_cat_id)
+                ->get();
+            // echo($value->wor_cat_name. "=>" );
+            $intermediateArr = [];
+            $subcategory_arr = [];
+            foreach ($subcategory_list as $key => $subcategory) {
+                $tmp = [];
+                $tmp["key"] = $subcategory->wor_subcat_id;
+                $tmp["value"] = $subcategory->subcat_name;
+                array_push($subcategory_arr, $tmp);
+            }
+            
+            $intermediateArr["category"] = $value->wor_cat_name;
+            $intermediateArr["subcategory"] = $subcategory_arr;
+            array_push($cat_sub_cat_arr_final, $intermediateArr);
+        }
+      return response()->json(['data'=>$cat_sub_cat_arr_final],$this->successStatus);
     }
 }

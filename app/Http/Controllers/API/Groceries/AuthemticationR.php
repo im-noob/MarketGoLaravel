@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API\Groceries;
+namespace App\Http\Controllers\API\Restaurant;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller; 
 use App\User; 
 use Illuminate\Support\Facades\Auth; 
 use Validator;
 use Illuminate\Support\Facades\DB;
 
-class Authentication extends Controller
+class AuthemticationR extends Controller
 {
     public $successStatus = 200;
 
@@ -19,11 +19,10 @@ class Authentication extends Controller
      * @return \Illuminate\Http\Response 
     */ 
     public function login(Request $request){ 
-
-        $email =  $_POST["email"];// $request->json()->all()['email'];
-        $password = $_POST["password"];//$request->json()->all()['password'];
-        $user_type = $_POST["user_type"];//$request->json()->all()['user_type'];
-        $noti_token = $_POST["noti_token"];//$request->json()->all()['noti_token'];
+        $email =  $request->json()->all()['email'];
+        $password = $request->json()->all()['password'];
+        $user_type = $request->json()->all()['user_type'];
+        $noti_token = $request->json()->all()['noti_token'];
 
         if(Auth::attempt(['email' => $email, 'password' => $password, 'user_type' => $user_type])){ 
             $user = Auth::user(); 
@@ -42,37 +41,35 @@ class Authentication extends Controller
             ->update(['noti_token' => $noti_token]);
         //sending data according to user type
 
-            if($user_type == 'shop'){
+            if($user_type == 'resto'){
                 //featching profile data 
                 
 
                 //work info table data 
-                $shop_info_tab = DB::table('gro_shop_info_tab')->select()
+                $shop_info_tab = DB::table('res_info_tab')->select()
                                 ->where('user_id', '=', $shop_info_id[0]->id)
                                 ->get();
-             
+               
                 //making a aaray for item0
-                $rating = DB::table('gro_cart_tab')
-		                ->where('gro_shop_info_id', $shop_info_tab[0]->gro_shop_info_id)
+                $rating = DB::table('res_cart_tab')
+		                ->where('res_cart_lot_id', $shop_info_tab[0]->res_info_id)
 		                ->avg('rating');
 
                 // making sendable aaray         
                 $data = [
                         "displayName"=>$shop_info_tab[0]->name,
                         "contactNO"=>$shop_info_id[0]->phone,
-                        "state"=>$shop_info_tab[0]->state,
-                        "city"=>$shop_info_tab[0]->city,
+                        "points"=>$shop_info_tab[0]->points,
+                        "pic"=>$shop_info_tab[0]->pic,
                         "address"=>$shop_info_tab[0]->address,
                         "location"=>$shop_info_tab[0]->location,
                         "ratting"=>$rating,
-                        "pincode"=>$shop_info_tab[0]->Pin_Code,
                 	];
              }
-
-			       else{
+			else{
                 $data = "NOt Configure your controller in user controller line no 83";
             }
-            return response()->json(['success' => $success,'profileData' => $data,'userID'=>$shop_info_tab[0]->gro_shop_info_id,'status' => 'valid'], $this-> successStatus);
+            return response()->json(['success' => $success,'profileData' => $data,'userID'=>$shop_info_tab[0]->res_info_id,'status' => 'valid'], $this-> successStatus);
             
         } 
         else{ 
@@ -121,16 +118,14 @@ class Authentication extends Controller
                         ->where('email', '=', $email)
                         ->get();
         //sending data according to user type
-        if($user_type == 'shop'){
+        if($user_type == 'resto'){
               
             //sendng all data to work info table 
-            DB::table('gro_shop_info_tab')->insert(
+            DB::table('res_info_tab')->insert(
                 [
                   'user_id' => $wor_info_id[0]->id,
                   'name' => $name,
-                  'state' => "",
-                  'city' => "",
-                  'pin_code' => "",
+                  'points' => "",
                   'address' => "",
                   'location' => "",  
                   'pic' => "",

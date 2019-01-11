@@ -20,4 +20,8 @@
 	Route::post('Grocery/Shop/productList','API\Groceries\ShopController@productGet');
 	Route::get('Grocery/Shop/List','API\Groceries\ShopController@shopInfoGet');
 	Route::post('Grocery/Shop/product/price','API\Groceries\ShopController@productPriceGet')
+<<<<<<< HEAD
 ?> 
+=======
+?>
+>>>>>>> 1804fdb104a8b709269df502d31c8c70dc810ae0

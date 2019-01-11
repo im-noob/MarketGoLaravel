@@ -57,6 +57,7 @@ class ShopController extends Controller
 		$data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
+
         ->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
    		->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
         ->where([['gro_map_tab.gro_subcat_id','=',$value],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
@@ -85,12 +86,15 @@ class ShopController extends Controller
 	$datas = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
+
 		->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
 	   ->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_shop_info_id','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_product_shop_id','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
+
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
         ->whereIn('gro_product_shop_tab.gro_map_id',$totalProductmap)
 		
         ->distinct()
+
 		->orderBy('gro_map_tab.gro_cat_id')
 		->simplePaginate(20);
 		// ->whereIn([['gro_product_shop_tab.gro_map_id','=',$totalProductmap],['gro_product_shop_tab.quantity','=',$totalProductQuantity],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
@@ -101,6 +105,7 @@ class ShopController extends Controller
 		{
 			foreach($values as $value)
 			{
+
 				if($data->quantity == $value["quantity"] && $data->gro_map_id == $value["gro_map_id"] && $data->unit_name == $value["unit_name"] && $data->gro_shop_info_id == $shopID )
 				{
 					$data->Quantity = $value["Quantity"];
@@ -110,6 +115,7 @@ class ShopController extends Controller
 				}
 			}	
 		}
+
 		
        // var_dump($returnArray);
        return response()->json(['data' => $returnArray,'price'=>$price]);
