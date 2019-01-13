@@ -132,7 +132,7 @@ class LoginSignUP extends Controller
             $data = "NOt Configure your controller in user controller line no 83";
         }
         
-        return response()->json(['success'=>$success,'profileData' =>$profileData8,'userID'=>$userID,'reg_done' => 'yes'], $this-> successStatus); 
+        return response()->json(['success'=>$success,'profileData' =>$profileData,'userID'=>$userID,'reg_done' => 'yes'], $this-> successStatus); 
     }
    
     /** 
