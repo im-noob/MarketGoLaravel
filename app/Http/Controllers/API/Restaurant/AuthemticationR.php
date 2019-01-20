@@ -19,7 +19,7 @@ class AuthemticationR extends Controller
      * @return \Illuminate\Http\Response 
     */ 
     public function login(Request $request){ 
-        $email =  $request->json()->all()['email'];
+        $email = $request->json()->all()['email'];
         $password = $request->json()->all()['password'];
         $user_type = $request->json()->all()['user_type'];
         $noti_token = $request->json()->all()['noti_token'];
@@ -52,7 +52,7 @@ class AuthemticationR extends Controller
                
                 //making a aaray for item0
                 $rating = DB::table('res_cart_tab')
-		                ->where('res_cart_lot_id', $shop_info_tab[0]->res_info_id)
+		                ->where('res_info_id', $shop_info_tab[0]->res_info_id)
 		                ->avg('rating');
 
                 // making sendable aaray         
@@ -62,8 +62,13 @@ class AuthemticationR extends Controller
                         "points"=>$shop_info_tab[0]->points,
                         "pic"=>$shop_info_tab[0]->pic,
                         "address"=>$shop_info_tab[0]->address,
-                        "location"=>$shop_info_tab[0]->location,
+                        "state"=>$shop_info_tab[0]->state,
                         "ratting"=>$rating,
+                        "city"=>$shop_info_tab[0]->city,
+                        "product_visiblity"=>$shop_info_tab[0]->visiblilty,
+                        "isDelivry"=>$shop_info_tab[0]->isDelivry,
+                        "DCharge"=>$shop_info_tab[0]->DCharge,
+                        "pincode"=>$shop_info_tab[0]->pincode
                 	];
              }
 			else{
@@ -127,15 +132,38 @@ class AuthemticationR extends Controller
                   'name' => $name,
                   'points' => "",
                   'address' => "",
-                  'location' => "",  
+                  'city' => "",  
                   'pic' => "",
+                  'visiblilty'=>1,
                 ]
             );
+
+
+
+           $profile = DB::table('res_info_tab')
+                        ->where('user_id','=',$wor_info_id[0]->id)
+                        ->get();
+
+
+            $data = [
+                        "displayName"=>$profile[0]->name,
+                        "contactNO"=>"",
+                        "state"=>"",
+                        "city"=>"",
+                        "address"=>"",
+                        "ratting"=>0.1,
+                        "product_visiblity"=>1,
+                        "isDelivry"=>0,
+                        "DCharge"=>0,
+                        "pincode"=>0
+
+                   ];
+
         }else{
             $data = "NOt Configure your controller in user controller line no 83";
         }
         
-        return response()->json(['success'=>$success,'userID'=>$wor_info_id[0]->id,'reg_done' => 'yes'], $this-> successStatus); 
+        return response()->json(['success'=>$success,'profileData' => $data,'userID'=>$profile[0]->res_info_id,'reg_done' => 'yes'], $this-> successStatus); 
     }
    
     /** 
@@ -150,6 +178,8 @@ class AuthemticationR extends Controller
         $data = DB::select($query["query"]);
         return response()->json(['data' => $data], $this-> successStatus); 
     } 
+
+
     public function avilEmail(Request $request)
     {
       $data["status"] = true;

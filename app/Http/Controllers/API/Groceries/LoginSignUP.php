@@ -26,10 +26,11 @@ class LoginSignUP extends Controller
                       ->get();
             //sending data according to user type
 
+            $userID = $wor_info_id[0]->id; 
 
             if($user_type == 'user'){
                 //featching profile data 
-                
+                $profileData = $this->gerProfileData($userID);
                
               
             }else if($user_type == 'worker'){
@@ -37,7 +38,14 @@ class LoginSignUP extends Controller
             }else{
                 $data = "NOt Configure your controller in user controller line no 83";
             }
-            return response()->json(['success' => $success,'profileData' => [],'userID'=>$wor_info_id[0]->id,'status' => 'valid'], $this-> successStatus);
+            return response()->json(
+              [
+                'success' => $success,
+                'profileData' => $profileData,
+                'userID'=>$userID,
+                'status' => 'valid'
+              ], $this-> successStatus
+            );
         } 
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
@@ -45,11 +53,23 @@ class LoginSignUP extends Controller
     }
 
 
-    /** 
-     * Register api 
-     * 
-     *  
-    */ 
+    function gerProfileData($id){
+        $profileData = DB::table('customer_info_tab')->select('customer_info_id','cname','state','city','location','address','pic','cpin','user_id')
+                      ->where('user_id', '=', $id)
+                      ->get();
+        $profileData['customer_info_id'] = $profileData[0]->customer_info_id;
+        $profileData['cname'] = $profileData[0]->cname;
+        $profileData['state'] = $profileData[0]->state;
+        $profileData['city'] = $profileData[0]->city;
+        $profileData['location'] = $profileData[0]->location;
+        $profileData['address'] = $profileData[0]->address;
+        $profileData['pic'] = $profileData[0]->pic;
+        $profileData['cpin'] = $profileData[0]->cpin;
+        $profileData['user_id'] = $profileData[0]->user_id;
+
+        return($profileData);
+    }
+
     public function register(Request $request) 
     { 
        /** $name = $request->json()->all()['name'];
@@ -94,7 +114,7 @@ class LoginSignUP extends Controller
         $user_info_id = DB::table('users')->select('id')
                         ->where('email', '=', $email)
                         ->get();
-        
+        $userID = $wor_info_id[0]->id; 
         //sending data according to user type
         if($user_type == 'user'){
           
@@ -112,6 +132,8 @@ class LoginSignUP extends Controller
                 ]
             );
 
+            //featching profile data 
+                $profileData = $this->gerProfileData($userID);
 
         }else if($user_type != 'worker'){
             $data = "Configure your controller in user controller line no 83";
@@ -119,10 +141,7 @@ class LoginSignUP extends Controller
             $data = "NOt Configure your controller in user controller line no 83";
         }
         
-
-
-
-        return response()->json(['success'=>$success,'profileData' =>[],'userID'=>$wor_info_id[0]->id,'reg_done' => 'yes'], $this-> successStatus); 
+        return response()->json(['success'=>$success,'profileData' =>$profileData,'userID'=>$userID,'reg_done' => 'yes'], $this-> successStatus); 
     }
    
     /** 
@@ -137,6 +156,7 @@ class LoginSignUP extends Controller
         $data = DB::select($query["query"]);
         return response()->json(['data' => $data], $this-> successStatus); 
     } 
+
     public function avilEmail(Request $request)
     {
       $data["status"] = true;
