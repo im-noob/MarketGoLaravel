@@ -52,26 +52,34 @@ class LoginSignUP extends Controller
     */ 
     public function register(Request $request) 
     { 
-        $name = $request->json()->all()['name'];
+       /** $name = $request->json()->all()['name'];
         $email = $request->json()->all()['email'];
         // $password = $request->json()->all()['password'];
         // $c_password = $request->json()->all()['c_password'];
         $phone = $request->json()->all()['phone'];
-        $user_type = $request->json()->all()['user_type'];
+        $user_type = $request->json()->all()['user_type'];*/
+		$name = $request->name;
+		$email = $request->email;
+		$password = $request->password;
+		$c_password = $request->c_password;
+		$phone = $request->phone;
+		$user_type = $request->user_type;
         
 
         // saving login data to user table 
 
-        $validator = Validator::make($request->json()->all(), [ 
+        $validator = Validator::make($request->json()->all(),[ 
             'name' => 'required', 
             'email' => 'required|email', 
             'password' => 'required', 
             'c_password' => 'required|same:password', 
             'phone' => 'required|numeric',
         ]);
+		
         if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 401);            
         }
+		
         $input = $request->json()->all(); 
         $input['password'] = bcrypt($input['password']); 
         $user = User::create($input); 
@@ -83,7 +91,7 @@ class LoginSignUP extends Controller
 
 
         //fetching user id of the inserted data in users table 
-        $wor_info_id = DB::table('users')->select('id')
+        $user_info_id = DB::table('users')->select('id')
                         ->where('email', '=', $email)
                         ->get();
         
