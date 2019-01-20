@@ -19,7 +19,9 @@ class profile_GR extends Controller
     	$Pin_Code = $request_data["Pin_Code"];
     	$city = $request_data["city"];
     	$address = $request_data["address"];
-    	//$location = $_POST["location"];
+    	$visiblity = $request_data["visiblility"];
+    	$isDelivery = $request_data["delivery"];
+    	$DCharge = $request_data["dcharge"];
 
 
     	$profileData = Profile::where('gro_shop_info_id','=', $id)->first();
@@ -32,6 +34,9 @@ class profile_GR extends Controller
 		  $profileData->Pin_Code = $Pin_Code;
 		  $profileData->city = $city;
 		  $profileData->address = $address;
+		  $profileData->visiblilty = $visiblity;
+		  $profileData->IsDelivery = $isDelivry;
+		  $profileData->DCharge = $DCharge;
 		  //$profileData->location = $location;
 		  $profileData->save();
 
@@ -42,6 +47,6 @@ class profile_GR extends Controller
 		  $report = 'Message: '.$e->getMessage();
 		}
 
-    	return response()->json(['data' => "saved",'verify'=>$report], $this-> successStatus);;
+    	return response()->json(['data' => "saved",'verify'=>$report], $this-> successStatus);
     }
 }

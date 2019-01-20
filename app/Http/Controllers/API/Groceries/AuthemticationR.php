@@ -19,10 +19,11 @@ class AuthemticationR extends Controller
      * @return \Illuminate\Http\Response 
     */ 
     public function login(Request $request){ 
-        $email =  $request->json()->all()['email'];
+        $email =   $request->json()->all()['email'];
         $password = $request->json()->all()['password'];
         $user_type = $request->json()->all()['user_type'];
         $noti_token = $request->json()->all()['noti_token'];
+
 
         if(Auth::attempt(['email' => $email, 'password' => $password, 'user_type' => $user_type])){ 
             $user = Auth::user(); 
@@ -35,41 +36,44 @@ class AuthemticationR extends Controller
                   ->where('email', '=', $email)
                   ->get();
 
-
+        //print_r($shop_info_id);
+        //echo $shop_info_id[0]->id;
          DB::table('users')
             ->where('email', '=', $email)
             ->update(['noti_token' => $noti_token]);
         //sending data according to user type
 
-            if($user_type == 'resto'){
+            if($user_type == 'shop'){
                 //featching profile data 
-                
-
                 //work info table data 
-                $shop_info_tab = DB::table('res_info_tab')->select()
+                $shop_info_tab = DB::table('gro_shop_info_tab')->select()
                                 ->where('user_id', '=', $shop_info_id[0]->id)
                                 ->get();
                
+               //var_dump($shop_info_tab);
                 //making a aaray for item0
-                $rating = DB::table('res_cart_tab')
-		                ->where('res_cart_lot_id', $shop_info_tab[0]->res_info_id)
-		                ->avg('rating');
+                $rating = DB::table('gro_cart_tab')
+                    ->where('gro_shop_info_id', $shop_info_tab[0]->gro_shop_info_id)
+                    ->avg('rating');
 
                 // making sendable aaray         
                 $data = [
                         "displayName"=>$shop_info_tab[0]->name,
                         "contactNO"=>$shop_info_id[0]->phone,
-                        "points"=>$shop_info_tab[0]->points,
-                        "pic"=>$shop_info_tab[0]->pic,
+                        "state"=>$shop_info_tab[0]->state,
+                        "city"=>$shop_info_tab[0]->city,
                         "address"=>$shop_info_tab[0]->address,
                         "location"=>$shop_info_tab[0]->location,
                         "ratting"=>$rating,
-                	];
+                        "product_visiblity"=>$shop_info_tab[0]->visiblilty,
+                        "isDelivry"=>$shop_info_tab[0]->IsDelivery,
+                        "DCharge"=>$shop_info_tab[0]->DCharge,
+                  ];
              }
-			else{
+             else{
                 $data = "NOt Configure your controller in user controller line no 83";
             }
-            return response()->json(['success' => $success,'profileData' => $data,'userID'=>$shop_info_tab[0]->res_info_id,'status' => 'valid'], $this-> successStatus);
+            return response()->json(['success' => $success,'profileData' => $data,'userID'=>$shop_info_tab[0]->gro_shop_info_id,'status' => 'valid'], $this-> successStatus);
             
         } 
         else{ 
@@ -111,31 +115,48 @@ class AuthemticationR extends Controller
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
         $success['name'] =  $user->name;
 
-
-
         //fetching user id of the inserted data in users table 
         $wor_info_id = DB::table('users')->select('id')
                         ->where('email', '=', $email)
                         ->get();
         //sending data according to user type
-        if($user_type == 'resto'){
+        if($user_type == 'shop'){
               
             //sendng all data to work info table 
-            DB::table('res_info_tab')->insert(
+            DB::table('gro_shop_info_tab')->insert(
                 [
                   'user_id' => $wor_info_id[0]->id,
                   'name' => $name,
-                  'points' => "",
+                  'state' => "",
+                  'city' => "",
                   'address' => "",
                   'location' => "",  
                   'pic' => "",
+                  'visiblilty'=>1,
                 ]
             );
+
+            $profile = DB::table('gro_shop_info_tab')
+                        ->where('user_id','=',$wor_info_id[0]->id)
+                        ->get();
+                        
+            $data = [
+                        "displayName"=>$profile[0]->name,
+                        "contactNO"=>"",
+                        "state"=>"",
+                        "city"=>"",
+                        "address"=>"",
+                        "location"=>"",
+                        "ratting"=>0.1,
+                        "product_visiblity"=>1,
+                        "isDelivry"=>0,
+                        "DCharge"=>0,
+                   ];
         }else{
             $data = "NOt Configure your controller in user controller line no 83";
         }
         
-        return response()->json(['success'=>$success,'userID'=>$wor_info_id[0]->id,'reg_done' => 'yes'], $this-> successStatus); 
+        return response()->json(['success'=>$success,'profileData' => $data,'userID'=>$profile[0]->gro_shop_info_id,'reg_done' => 'yes'], $this-> successStatus); 
     }
    
     /** 
@@ -145,7 +166,6 @@ class AuthemticationR extends Controller
      */ 
     public function details(Request $request) 
     { 
-        
         $query = $request->json()->all();
         $data = DB::select($query["query"]);
         return response()->json(['data' => $data], $this-> successStatus); 
