@@ -54,9 +54,10 @@ class LoginSignUP extends Controller
 
 
     function gerProfileData($id){
-        $profileData = DB::table('customer_info_tab')->select('cname','state','city','location','address','pic','cpin','user_id')
+        $profileData = DB::table('customer_info_tab')->select('customer_info_id','cname','state','city','location','address','pic','cpin','user_id')
                       ->where('user_id', '=', $id)
                       ->get();
+        $profileData['customer_info_id'] = $profileData[0]->customer_info_id;
         $profileData['cname'] = $profileData[0]->cname;
         $profileData['state'] = $profileData[0]->state;
         $profileData['city'] = $profileData[0]->city;
