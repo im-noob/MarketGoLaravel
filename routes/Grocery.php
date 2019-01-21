@@ -25,6 +25,19 @@
 		Route::post('Grocery/Order/History/Item','API\Groceries\OrderSet@getOrderListItem');
 		
 	});
+
+	
+	//For Authenticated user.
+	Route::group(['middleware' => 'auth:api'], function(){
+		// Route::post('details', 'API\UserController@details')
+		Route::post('profileGR', 'API\Groceries\profile_GR@UpdateProfile');
+		Route::post('Retailer/UpdateOrder', 'API\Groceries\RQuery@UpdateOrder');
+		Route::post('Retailer/getOrder', 'API\Groceries\OrderC@getActiveOrder');
+		Route::post('Retailer/getPOrder', 'API\Groceries\OrderC@getPackedOrder');
+	});
+
+	Route::get('Retailer/getCatrgory', 'API\Groceries\RQuery@getCategory');
+	Route::post('Retailer/AddCategory', 'API\Groceries\RQuery@AddCategory');
 	
 	
 ?>
