@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class RQuery extends Controller
 {
+	public $successStatus = 200;
     public function details(Request $request) 
     {     
         $query = $request->json()->all();
         $data = DB::select($query["query"]);
         return response()->json(['data' => $data], $this-> successStatus); 
-    } 
+    }
 
     public function getCategory(Request $request) 
     {     
@@ -80,23 +81,21 @@ class RQuery extends Controller
 
         $flag = "Error";
         //var_dump($FatchData);
+        $FatchData1 = json_encode($FatchData);
+        $data1  = array();
        
-       try{
 
-            foreach ($FatchData as $key => $value) {    
-                DB::table('gro_order_tab')
-                    ->where('gro_order_id', '=', $value['gro_order_id'])
-                    ->update(['order_status' => $value['order_status']]);
-            }
-             DB::table('gro_cart_tab')
-                    ->where('gro_cart_id', '=', $id)
-                    ->update(['status' => 1]);
-
+        foreach ($FatchData as $key => $value) {
+            
+            DB::table('gro_order_tab')
+                ->where('gro_order_id', '=', $value['gro_order_id'])
+                ->update(['order_status' => $value['order_status']]);
         }
-        catch(Exception $ex){
 
-        }
+         DB::table('gro_cart_tab')
+                ->where('gro_cart_id', '=', $id)
+                ->update(['status' => 1]);
 
         return response()->json(['data' => "Success"], $this-> successStatus); 
-    }
+    } 
 }

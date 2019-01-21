@@ -47,6 +47,6 @@ class profile_GR extends Controller
 		  $report = 'Message: '.$e->getMessage();
 		}
 
-    	return response()->json(['data' => "saved",'verify'=>$report], $this-> successStatus);
+    	return response()->json(['data' => "saved",'verify'=>$report], $this-> successStatus);;
     }
 }
