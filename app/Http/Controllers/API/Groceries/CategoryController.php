@@ -62,10 +62,11 @@ class CategoryController extends Controller
 		$data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
-        ->select('gro_product_list_tab.gro_product_name','gro_product_shop_tab.gro_price','gro_map_tab.quantity','gro_map_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic')
+
+        ->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_map_tab.quantity','gro_map_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic')
         ->where('gro_map_tab.gro_subcat_id','=',$value)
         ->distinct()
-		->orderBy('gro_cat_id')
+		->orderBy('gro_map_tab.gro_cat_id')
 		->simplePaginate(20);
 
         

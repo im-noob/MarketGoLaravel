@@ -121,18 +121,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response 
     */ 
     public function register(Request $request) 
-    { 
-        $name = $request->json()->all()['name'];
-        $email = $request->json()->all()['email'];
-        // $password = $request->json()->all()['password'];
-        // $c_password = $request->json()->all()['c_password'];
-        $phone = $request->json()->all()['phone'];
-        $user_type = $request->json()->all()['user_type'];
-        
-
-        // saving login data to user table 
-
-        $validator = Validator::make($request->json()->all(), [ 
+    {
+        $validator = Validator::make($request->all(), [ 
             'name' => 'required', 
             'email' => 'required|email', 
             'password' => 'required', 
@@ -145,7 +135,7 @@ class UserController extends Controller
         $input = $request->json()->all(); 
         $input['password'] = bcrypt($input['password']); 
         $user = User::create($input); 
-        $success['token'] =  $user->createToken('MyApp')-> accessToken; 
+        $success['token'] =  $user->createToken('MyApp')->accessToken; 
         $success['name'] =  $user->name;
 
 

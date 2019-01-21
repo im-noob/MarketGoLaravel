@@ -1,6 +1,7 @@
  <?php
 	Route::get('Restaurant/Shop/List','API\Restaurant\RestaurantShopController@shopInfoGet');
 
+
 	//Root for restirent Apps
 	Route::post('loginRT', 'API\Restaurant\AuthemticationR@login'); 
 	Route::post('registerRT', 'API\Restaurant\AuthemticationR@register');

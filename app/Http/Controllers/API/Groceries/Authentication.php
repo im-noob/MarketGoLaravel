@@ -24,6 +24,10 @@ class Authentication extends Controller
         $user_type = $request->json()->all()['user_type'];
         $noti_token = $request->json()->all()['noti_token'];
 
+        //$email =  $_POST["email"];// $request->json()->all()['email'];
+        //$password = $_POST["password"];//$request->json()->all()['password'];
+        //$user_type = $_POST["user_type"];//$request->json()->all()['user_type'];
+        //$noti_token = $_POST["noti_token"];//$request->json()->all()['noti_token'];
 
         if(Auth::attempt(['email' => $email, 'password' => $password, 'user_type' => $user_type])){ 
             $user = Auth::user(); 
@@ -49,8 +53,7 @@ class Authentication extends Controller
                 $shop_info_tab = DB::table('gro_shop_info_tab')->select()
                                 ->where('user_id', '=', $shop_info_id[0]->id)
                                 ->get();
-               
-               //var_dump($shop_info_tab);
+
                 //making a aaray for item0
                 $rating = DB::table('gro_cart_tab')
 		                ->where('gro_shop_info_id', $shop_info_tab[0]->gro_shop_info_id)
@@ -70,6 +73,7 @@ class Authentication extends Controller
                         "DCharge"=>$shop_info_tab[0]->DCharge,
                 	];
              }
+
 			       else{
                 $data = "NOt Configure your controller in user controller line no 83";
             }
