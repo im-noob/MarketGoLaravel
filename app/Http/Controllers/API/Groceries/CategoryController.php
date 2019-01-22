@@ -9,7 +9,9 @@ class CategoryController extends Controller
 {
     public function categoryGet()
     {
-	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
+	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic
+	from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = 
+	gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
       // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
@@ -82,7 +84,8 @@ class CategoryController extends Controller
       // var_dump($mapID[0]);
 	    $data = DB::table('gro_product_shop_tab')
                         ->join('gro_shop_info_tab','gro_shop_info_tab.gro_shop_info_id','=','gro_product_shop_tab.gro_shop_info_id')
-                        ->select('gro_shop_info_tab.name','gro_product_shop_tab.gro_map_id','gro_shop_info_tab.city','gro_shop_info_tab.address','gro_shop_info_tab.gro_shop_info_id','gro_shop_info_tab.state','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.gro_product_shop_id')
+                       ->join('users','gro_shop_info_tab.user_id','=','users.id')
+					   ->select('gro_shop_info_tab.name','gro_product_shop_tab.gro_map_id','users.noti_token','gro_shop_info_tab.city','gro_shop_info_tab.address','gro_shop_info_tab.gro_shop_info_id','gro_shop_info_tab.state','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.gro_product_shop_id')
                         ->where('gro_product_shop_tab.gro_map_id','=',$mapID[0]->gro_map_id)
                         ->simplePaginate(100);
       //  var_dump($data);	$mapID[0]->gro_map_id

@@ -12,8 +12,11 @@ class RestaurantController extends Controller
 	public function categoryGet(Request $request)
     {
 		 $shopID=$request->Shopid;
-	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
-      // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
+	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic 
+	from gro_product_shop_tab  INNER JOIN gro_map_tab ON
+	gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  
+	INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
+ // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
 	 $data = DB::table('res_shop_food_tab')
 		->join("res_food_map_tab", "res_shop_food_tab.res_food_map_tab","=","res_food_map_tab.res_food_map_tab_id")
 		->join("res_food_cat_tab","res_food_cat_tab.gro_cres_food_cat_id","=","res_food_map_tab.gro_cres_food_cat_id")
