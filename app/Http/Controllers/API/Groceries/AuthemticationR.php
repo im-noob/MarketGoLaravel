@@ -28,8 +28,6 @@ class AuthemticationR extends Controller
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
 
-
-
         // work info id fratching 
         $shop_info_id = DB::table('users')->select('id','phone')
                   ->where('email', '=', $email)

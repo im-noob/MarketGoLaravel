@@ -21,7 +21,8 @@
 	Route::get('Grocery/Shop/List','API\Groceries\ShopController@shopInfoGet');
 	Route::post('Grocery/Shop/product/price','API\Groceries\ShopController@productPriceGet');
 
-
+	Route::post('loginGR', 'API\Groceries\Authentication@login'); 
+	Route::post('registerGR', 'API\Groceries\Authentication@register');
 	//For Authenticated user.
 	Route::group(['middleware' => 'auth:api'], function(){
 		Route::post('gro_order','API\Groceries\OrderSet@getRequestOrderValue');
