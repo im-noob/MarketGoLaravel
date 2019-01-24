@@ -8,16 +8,18 @@ use Illuminate\Support\Facades\DB;
 
 class ServicesController extends Controller
 {
-<<<<<<< HEAD
-     public function categoryGet()
+	public $successStatus = 200;
+    public function categoryGet()
     {
-	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
+/**SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab 
+	INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  
+	INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
       // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
 	 $data = DB::table('wor_cat_tab')
-		->select("wor_cat_name","wor_cat_id","wor_cat_pic")
-		->distinct()
-		->orderBy('wor_cat_id')
-		->simplePaginate(20);
+			->select("wor_cat_name","wor_cat_id","wor_cat_pic")
+			->distinct()
+			->orderBy('wor_cat_id')
+			->simplePaginate(20);
 
         return response()->json(['data' => $data]);
     }
@@ -26,20 +28,19 @@ class ServicesController extends Controller
 	  public function subCategoryGet(Request $request)
     {
 		$catID = $request->id; 
-	/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
-      // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
-	 $data = DB::table('wor_subcat_tab')
-		->select("subcat_name","wor_cat_id","wor_subcat_id","pic")
-		->where("wor_cat_id","=",$catID)
-		->distinct()
-		->orderBy('wor_subcat_id')
-		->simplePaginate(20);
+		/** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab 
+		INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id 
+		INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
+		// $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
+	$data = DB::table('wor_subcat_tab')
+			->select("subcat_name","wor_cat_id","wor_subcat_id","pic")
+			->where("wor_cat_id","=",$catID)
+			->distinct()
+			->orderBy('wor_subcat_id')
+			->simplePaginate(20);
 
         return response()->json(['data' => $data]);
     }
-
-=======
-    public $successStatus = 200;
 
     public function Cat_SubCat_Json(Request $request) 
     {
@@ -69,5 +70,4 @@ class ServicesController extends Controller
         }
       	return response()->json(['data'=>$cat_sub_cat_arr_final],$this->successStatus);
     }
->>>>>>> 1804fdb104a8b709269df502d31c8c70dc810ae0
 }

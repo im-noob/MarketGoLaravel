@@ -9,7 +9,10 @@ class ShopController extends Controller
 {
     public function shopInfoGet()
     {
-        $data = DB::table('gro_shop_info_tab')->select("*")->orderBy('gro_shop_info_id')->simplePaginate(10);
+        $data = DB::table('gro_shop_info_tab')
+		->join('users','gro_shop_info_tab.user_id','=','users.id')
+					  
+		->select('users.noti_token',"gro_shop_info_tab.*")->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
 
         return response()->json(['data' => $data]);
     }
@@ -22,6 +25,7 @@ class ShopController extends Controller
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")
+		
 		->select("gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic")
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
 		->distinct()
