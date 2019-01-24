@@ -23,13 +23,14 @@
 		Route::post('gro_order','API\Groceries\OrderSet@getRequestOrderValue');
 		Route::post('Grocery/Order/History/Item','API\Groceries\OrderSet@getOrderListItem');
 		Route::post('Grocery/Order/History','API\Groceries\OrderSet@getOrderList');
+		Route::post('Recent','API\Groceries\OrderSet@getRecentListItem');
 		
 		Route::post('profileGR', 'API\Groceries\profile_GR@UpdateProfile');
 		Route::post('Retailer/UpdateOrder', 'API\Groceries\RQuery@UpdateOrder');
 		Route::post('Retailer/getOrder', 'API\Groceries\OrderC@getActiveOrder');
 		Route::post('Retailer/getPOrder', 'API\Groceries\OrderC@getPackedOrder');
 	});
-	Route::post('Recent','API\Groceries\OrderSet@getRecentListItem');
+	
 		
 	Route::get('Retailer/getCatrgory', 'API\Groceries\RQuery@getCategory');
 	Route::post('Retailer/AddCategory', 'API\Groceries\RQuery@AddCategory');
