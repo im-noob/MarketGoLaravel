@@ -35,10 +35,12 @@ class ServicesController extends Controller
 	// 	->orderBy('wor_subcat_id')
 	// 	->simplePaginate(20);
 
+
  //        return response()->json(['data' => $data]);
  //    }
 
     public $successStatus = 200;
+
 
     public function Cat_SubCat_Json(Request $request) 
     {

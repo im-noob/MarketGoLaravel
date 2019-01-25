@@ -1,5 +1,6 @@
  <?php
 	Route::get('Restaurant/Shop/List','API\Restaurant\RestaurantShopController@shopInfoGet');
+	Route::post('Restaurant/Shop/cat','API\Restaurant\RestaurantShopController@categoryGet');
 
 
 	//Root for restirent Apps
