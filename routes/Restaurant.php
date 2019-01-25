@@ -1,7 +1,15 @@
  <?php
 	Route::get('Restaurant/Shop/List','API\Restaurant\RestaurantShopController@shopInfoGet');
 	Route::post('Restaurant/Shop/cat','API\Restaurant\RestaurantShopController@categoryGet');
+	Route::post('Restaurant/Shop/subCat','API\Restaurant\RestaurantShopController@subCategoryGet');
+	Route::post('Restaurant/Shop/pro','API\Restaurant\RestaurantShopController@productGet');
 
+	
+	Route::post('Restaurant/cat','API\Restaurant\RestaurantController@categoryGet');
+	Route::post('Restaurant/subCat','API\Restaurant\RestaurantController@subCategoryGet');
+	Route::post('Restaurant/pro','API\Restaurant\RestaurantController@productGet');
+
+	
 
 	//Root for restirent Apps
 	Route::post('loginRT', 'API\Restaurant\AuthemticationR@login'); 
