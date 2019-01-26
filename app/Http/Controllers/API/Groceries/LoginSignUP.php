@@ -15,7 +15,7 @@ class LoginSignUP extends Controller
         $email = $request->json()->all()['email'];
         $password = $request->json()->all()['password'];
         $user_type = $request->json()->all()['user_type'];
-
+		 $noti_token = $request->json()->all()['noti_token'];
         if(Auth::attempt(['email' => $email, 'password' => $password, 'user_type' => $user_type])){ 
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
