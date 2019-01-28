@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Groceries;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\GroceriesModel\Profile;
+use App\GroceriesModel\ProfileGR;
 
 class profile_GR extends Controller
 {
@@ -12,11 +12,15 @@ class profile_GR extends Controller
 
     public function UpdateProfile(Request $request){
 
-    	$request_data = $request->json()->all();
-    	$id = $request_data["id"];
+    	//$Data = $request->all();
+	  
+	  	//return response()->json(['request' => $Data,'File'=>$_FILES,'post'=>$_POST]);
+    	
+    	$request_data = $request->all();
+    	$id = $request_data["shop_id"];
     	$name = $request_data["name"];
     	$state = $request_data["state"];
-    	$Pin_Code = $request_data["Pin_Code"];
+    	$Pin_Code = $request_data["pincode"];
     	$city = $request_data["city"];
     	$address = $request_data["address"];
     	$visiblity = $request_data["visiblility"];
@@ -24,7 +28,43 @@ class profile_GR extends Controller
     	$DCharge = $request_data["dcharge"];
 
 
-    	$profileData = Profile::where('gro_shop_info_id','=', $id)->first();
+    	$nametoupload = '';
+      	if(isset($_FILES["photo"])){
+
+    	  $FILES = $_FILES["photo"];
+	      $name1 = 'Shop_id_'.$id.'/';
+		  $upload_dir = storage_path('app/public/Profie/'.$name1);
+		  // create folder if not exists
+		  if (!file_exists($upload_dir)) {
+		    mkdir($upload_dir, 0777, true);
+		  }
+
+		  //Send error 
+		  if ($FILES['error'])
+		  {
+		    return response()->json(['error'=>'Invalid file']);
+		  }
+
+		  //Change file name
+		  
+		  $imageFileType = pathinfo($FILES["name"],PATHINFO_EXTENSION);
+		  $target_file = $upload_dir.$name.'.'.$imageFileType;
+
+		  
+		  //Upload file
+		  if (move_uploaded_file($FILES["tmp_name"], $target_file))
+		  {	
+		  	//global $nametoupload;
+		  	$nametoupload = 'http://gomarket.ourgts.com/storage/app/public/Profie/'.$name1.$name.'.'.$imageFileType;
+		  }
+		  else
+		  {
+		    return response()->json(['error'=>'Invalid file']);
+		  }	
+      	}
+
+
+    	$profileData = ProfileGR::where('gro_shop_info_id','=', $id)->first();
 
     	$report ="";
 
@@ -35,9 +75,13 @@ class profile_GR extends Controller
 		  $profileData->city = $city;
 		  $profileData->address = $address;
 		  $profileData->visiblilty = $visiblity;
-		  $profileData->IsDelivery = $isDelivry;
+		  $profileData->IsDelivery = $isDelivery;
 		  $profileData->DCharge = $DCharge;
-		  //$profileData->location = $location;
+		  
+		  if($nametoupload != ''){
+		  		$profileData->pic = $nametoupload;
+		  }
+
 		  $profileData->save();
 
 		  $report = "Successfully Updated";

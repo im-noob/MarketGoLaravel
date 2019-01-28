@@ -71,6 +71,8 @@ class Authentication extends Controller
                         "product_visiblity"=>$shop_info_tab[0]->visiblilty,
                         "isDelivry"=>$shop_info_tab[0]->IsDelivery,
                         "DCharge"=>$shop_info_tab[0]->DCharge,
+                        "pic"=>$shop_info_tab[0]->pic,
+                        "Pin_Code"=>$shop_info_tab[0]->Pin_Code,
                 	];
              }
 
@@ -157,6 +159,8 @@ class Authentication extends Controller
                         "product_visiblity"=>1,
                         "isDelivry"=>0,
                         "DCharge"=>0,
+                        "pic"=>$profile[0]->pic,
+                        "Pin_Code"=>$shop_info_tab[0]->Pin_Code,
                    ];
         }else{
             $data = "NOt Configure your controller in user controller line no 83";
