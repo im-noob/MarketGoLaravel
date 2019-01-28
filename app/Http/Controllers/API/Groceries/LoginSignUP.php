@@ -15,7 +15,7 @@ class LoginSignUP extends Controller
         $email = $request->json()->all()['email'];
         $password = $request->json()->all()['password'];
         $user_type = $request->json()->all()['user_type'];
-
+		 $noti_token = $request->json()->all()['noti_token'];
         if(Auth::attempt(['email' => $email, 'password' => $password, 'user_type' => $user_type])){ 
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
@@ -72,19 +72,13 @@ class LoginSignUP extends Controller
 
     public function register(Request $request) 
     { 
-       /** $name = $request->json()->all()['name'];
+        $name = $request->json()->all()['name'];
         $email = $request->json()->all()['email'];
-        // $password = $request->json()->all()['password'];
-        // $c_password = $request->json()->all()['c_password'];
+        $password = $request->json()->all()['password'];
+        $c_password = $request->json()->all()['c_password'];
         $phone = $request->json()->all()['phone'];
-        $user_type = $request->json()->all()['user_type'];*/
-		$name = $request->name;
-		$email = $request->email;
-		$password = $request->password;
-		$c_password = $request->c_password;
-		$phone = $request->phone;
-		$user_type = $request->user_type;
-        
+        $user_type = $request->json()->all()['user_type'];
+
 
         // saving login data to user table 
 
@@ -111,7 +105,7 @@ class LoginSignUP extends Controller
 
 
         //fetching user id of the inserted data in users table 
-        $user_info_id = DB::table('users')->select('id')
+        $wor_info_id = DB::table('users')->select('id')
                         ->where('email', '=', $email)
                         ->get();
         $userID = $wor_info_id[0]->id; 
