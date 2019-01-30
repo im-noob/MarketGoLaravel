@@ -16,7 +16,9 @@ class CategoryController extends Controller
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")
+		->join("gro_shop_info_tab","gro_shop_info_tab.gro_shop_info_id","=","gro_product_shop_tab.gro_shop_info_id")
 		->select("gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic")
+		->where("gro_shop_info_tab.visiblilty","=",1)
 		->distinct()
 		->orderBy('gro_cat_id')
 		->simplePaginate(20);
@@ -33,8 +35,9 @@ class CategoryController extends Controller
 		 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		 ->join('gro_subcat_tab','gro_subcat_tab.gro_subcat_id','=','gro_map_tab.gro_subcat_id')
+		 ->join("gro_shop_info_tab","gro_shop_info_tab.gro_shop_info_id","=","gro_product_shop_tab.gro_shop_info_id")
 		 ->select('gro_subcat_tab.subcat_name','gro_subcat_tab.pic','gro_subcat_tab.gro_subcat_id')              
-		->where('gro_map_tab.gro_cat_id','=',$value)
+		->where([['gro_map_tab.gro_cat_id','=',$value],["gro_shop_info_tab.visiblilty","=",1]])
 		->distinct()
 		->simplePaginate(20);
 		
@@ -64,9 +67,11 @@ class CategoryController extends Controller
 		$data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
-
-        ->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_map_tab.quantity','gro_map_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic')
-        ->where('gro_map_tab.gro_subcat_id','=',$value)
+		->join("gro_shop_info_tab","gro_shop_info_tab.gro_shop_info_id","=","gro_product_shop_tab.gro_shop_info_id")
+		->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
+   		
+	   ->select('gro_product_list_tab.gro_product_name','gro_product_shop_tab.inStock','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_map_tab.quantity','gro_map_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
+        ->where([['gro_map_tab.gro_subcat_id','=',$value],["gro_shop_info_tab.visiblilty","=",1]])
         ->distinct()
 		->orderBy('gro_map_tab.gro_cat_id')
 		->simplePaginate(20);
@@ -75,7 +80,7 @@ class CategoryController extends Controller
         return response()->json(['data' => $data]);
     }
 
-        /** From this function we get Related shop of the product */
+        /** From this function we get Related shop of the product  	visiblilty*/
     public function RelatedShopsGet(Request $request)
     {
         $value = $request->id;

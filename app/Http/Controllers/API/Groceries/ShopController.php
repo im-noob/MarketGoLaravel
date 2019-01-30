@@ -12,7 +12,9 @@ class ShopController extends Controller
         $data = DB::table('gro_shop_info_tab')
 		->join('users','gro_shop_info_tab.user_id','=','users.id')
 					  
-		->select('users.noti_token',"gro_shop_info_tab.*")->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
+		->select('users.noti_token',"gro_shop_info_tab.*")
+		->where("gro_shop_info_tab.visiblilty","=",1)
+		->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
 
         return response()->json(['data' => $data]);
     }
@@ -63,7 +65,7 @@ class ShopController extends Controller
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
 
         ->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-   		->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
+   		->select('gro_product_list_tab.gro_product_name','gro_product_shop_tab.inStock','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
         ->where([['gro_map_tab.gro_subcat_id','=',$value],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
         ->distinct()
 		->orderBy('gro_map_tab.gro_cat_id')

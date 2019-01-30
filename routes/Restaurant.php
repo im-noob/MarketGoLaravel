@@ -5,7 +5,7 @@
 	Route::post('Restaurant/Shop/pro','API\Restaurant\RestaurantShopController@productGet');
 
 	
-	Route::post('Restaurant/cat','API\Restaurant\RestaurantController@categoryGet');
+	Route::get('Restaurant/cat','API\Restaurant\RestaurantController@categoryGet');
 	Route::post('Restaurant/subCat','API\Restaurant\RestaurantController@subCategoryGet');
 	Route::post('Restaurant/pro','API\Restaurant\RestaurantController@productGet');
 
