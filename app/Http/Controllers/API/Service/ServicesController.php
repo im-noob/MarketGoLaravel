@@ -8,37 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ServicesController extends Controller
 {
-
- //     public function categoryGet()
- //    {
-	// /** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
- //      // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
-	//  $data = DB::table('wor_cat_tab')
-	// 	->select("wor_cat_name","wor_cat_id","wor_cat_pic")
-	// 	->distinct()
-	// 	->orderBy('wor_cat_id')
-	// 	->simplePaginate(20);
-
- //        return response()->json(['data' => $data]);
- //    }
-	
-	// /** Subcategory*/
-	//   public function subCategoryGet(Request $request)
- //    {
-	// 	$catID = $request->id; 
-	// /** SELECT DISTINCT gro_cat_tab.gro_cat_id,gro_cat_tab.gro_cat_name,gro_cat_tab.pic from gro_product_shop_tab  INNER JOIN gro_map_tab ON gro_product_shop_tab.gro_map_id = gro_map_tab.gro_map_id  INNER JOIN gro_cat_tab ON gro_map_tab.gro_cat_id = gro_cat_tab.gro_cat_id */
- //      // $data = DB::table('gro_cat_tab')->select("gro_cat_id","gro_cat_name","pic")->orderBy('gro_cat_id')->simplePaginate(20);
-	//  $data = DB::table('wor_subcat_tab')
-	// 	->select("subcat_name","wor_cat_id","wor_subcat_id","pic")
-	// 	->where("wor_cat_id","=",$catID)
-	// 	->distinct()
-	// 	->orderBy('wor_subcat_id')
-	// 	->simplePaginate(20);
-
-
- //        return response()->json(['data' => $data]);
- //    }
-
     public $successStatus = 200;
 
 
@@ -150,5 +119,95 @@ class ServicesController extends Controller
                 ];
 
         return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$request],$this->successStatus);
+    }
+
+    // histyr geing
+    public function ServiceHistory_get(Request $request){
+        $wor_serviceManPorifleID = $request->json()->all()['profileID'];
+
+        $data = [
+                    [
+                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+                        "workerName"=>"Worker Name1",
+                        "Work"=>"Work Name1",
+                        "title"=>"Title1",
+                        "message"=>"Message1",
+                        "workPorgressStatus"=>5,
+                        "billList"=>[
+                            [
+                            "list_id"=> "11",
+                            "price"=> "501",
+                            "work"=> "Condencer1"
+                            ],
+                            [
+                            "list_id"=> "21",
+                            "price"=> "2001",
+                            "work"=> "Repairing1"
+                            ]
+                        ],
+                    ],
+                    [
+                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+                        "workerName"=>"Worker Name2",
+                        "Work"=>"Work Name2",
+                        "title"=>"Title2",
+                        "message"=>"Message2",
+                        "workPorgressStatus"=>4,
+                        "billList"=>[
+                            [
+                            "list_id"=> "12",
+                            "price"=> "502",
+                            "work"=> "Condencer2"
+                            ],
+                            [
+                            "list_id"=> "22",
+                            "price"=> "2002",
+                            "work"=> "Repairing2"
+                            ]
+                        ],
+                    ],
+                    [
+                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+                        "workerName"=>"Worker Name3",
+                        "Work"=>"Work Name3",
+                        "title"=>"Title3",
+                        "message"=>"Message3",
+                        "workPorgressStatus"=>3,
+                        "billList"=>[
+                            [
+                            "list_id"=> "13",
+                            "price"=> "503",
+                            "work"=> "Condencer3"
+                            ],
+                            [
+                            "list_id"=> "23",
+                            "price"=> "2003",
+                            "work"=> "Repairing3"
+                            ]
+                        ],
+                    ],
+                    [
+                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+                        "workerName"=>"Worker Name4",
+                        "Work"=>"Work Name4",
+                        "title"=>"Title4",
+                        "message"=>"Message4",
+                        "workPorgressStatus"=>2,
+                        "billList"=>[
+                            [
+                            "list_id"=> "14",
+                            "price"=> "504",
+                            "work"=> "Condencer4"
+                            ],
+                            [
+                            "list_id"=> "24",
+                            "price"=> "2004",
+                            "work"=> "Repairing4"
+                            ]
+                        ],
+                    ],
+                ];
+
+        return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$wor_serviceManPorifleID],$this->successStatus);
     }
 }
