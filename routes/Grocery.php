@@ -35,6 +35,7 @@
 		Route::post('Retailer/getProductList', 'API\Groceries\ProductController@getShpProduct');
 		Route::post('Retailer/getRPList', 'API\Groceries\ProductController@getRestProductList');
 		Route::post('Retailer/addProduct', 'API\Groceries\ProductController@addProductItem');
+		Route::post('Retailer/getProduct', 'API\Groceries\ProductController@getProduct');
 	});
 	
 		
