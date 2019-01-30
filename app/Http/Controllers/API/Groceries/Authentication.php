@@ -62,7 +62,8 @@ class Authentication extends Controller
                 // making sendable aaray         
                 $data = [
                         "displayName"=>$shop_info_tab[0]->name,
-                        "contactNO"=>$shop_info_id[0]->phone,
+                        "contactNO"=>$shop_info_tab[0]->mobile1,
+                        "contactNO2"=>$shop_info_tab[0]->mobile2,
                         "state"=>$shop_info_tab[0]->state,
                         "city"=>$shop_info_tab[0]->city,
                         "address"=>$shop_info_tab[0]->address,
@@ -135,11 +136,12 @@ class Authentication extends Controller
                 [
                   'user_id' => $wor_info_id[0]->id,
                   'name' => $name,
+                  'mobile1'=>$phone,
                   'state' => "",
                   'city' => "",
                   'address' => "",
                   'location' => "",  
-                  'pic' => "",
+                  'pic' => "http://gomarket.ourgts.com/storage/app/public/offer/ImageNotFound.png",
                   'visiblilty'=>1,
                 ]
             );
@@ -150,7 +152,8 @@ class Authentication extends Controller
 
             $data = [
                         "displayName"=>$profile[0]->name,
-                        "contactNO"=>"",
+                        "contactNO"=>$profile[0]->mobile1,
+                        "contactNO2"=>'',
                         "state"=>"",
                         "city"=>"",
                         "address"=>"",
@@ -160,7 +163,7 @@ class Authentication extends Controller
                         "isDelivry"=>0,
                         "DCharge"=>0,
                         "pic"=>$profile[0]->pic,
-                        "Pin_Code"=>$shop_info_tab[0]->Pin_Code,
+                        "Pin_Code"=>'0',
                    ];
         }else{
             $data = "NOt Configure your controller in user controller line no 83";

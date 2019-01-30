@@ -56,16 +56,16 @@ class offerController extends Controller
 		  }
 
 		  //Change file name
-		  
+		  $target_file1 = uniqid().time();
 		  $imageFileType = pathinfo($FILES["name"],PATHINFO_EXTENSION);
-		  $target_file = $upload_dir.$offer_name.'.'.$imageFileType;
+		  $target_file = $upload_dir.$target_file1.'.'.$imageFileType;
 
 		  
 		  //Upload file
 		  if (move_uploaded_file($FILES["tmp_name"], $target_file))
 		  {	
 		  	//global $nametoupload;
-		  	$nametoupload = $name.$offer_name.'.'.$imageFileType;
+		  	$nametoupload = $name.$target_file1.'.'.$imageFileType;
 		  }
 		  else
 		  {
@@ -85,9 +85,6 @@ class offerController extends Controller
 	              'gro_offer_comment'=>$comment,
 	            );
 
-
-      	
-  		
 
       	if($operation == "Edit"){
       		if ($nametoupload != '') {

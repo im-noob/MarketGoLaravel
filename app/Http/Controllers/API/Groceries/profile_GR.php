@@ -26,6 +26,8 @@ class profile_GR extends Controller
     	$visiblity = $request_data["visiblility"];
     	$isDelivery = $request_data["delivery"];
     	$DCharge = $request_data["dcharge"];
+    	$phoneno = $request_data["phoneno"];
+    	$phoneno2 = $request_data["phoneno2"];
 
 
     	$nametoupload = '';
@@ -46,16 +48,16 @@ class profile_GR extends Controller
 		  }
 
 		  //Change file name
-		  
+		  $target_file1 = uniqid().time();
 		  $imageFileType = pathinfo($FILES["name"],PATHINFO_EXTENSION);
-		  $target_file = $upload_dir.$name.'.'.$imageFileType;
+		  $target_file = $upload_dir.$target_file1.'.'.$imageFileType;
 
 		  
 		  //Upload file
 		  if (move_uploaded_file($FILES["tmp_name"], $target_file))
 		  {	
 		  	//global $nametoupload;
-		  	$nametoupload = 'http://gomarket.ourgts.com/storage/app/public/Profie/'.$name1.$name.'.'.$imageFileType;
+		  	$nametoupload = 'http://gomarket.ourgts.com/storage/app/public/Profie/'.$name1.$target_file1.'.'.$imageFileType;
 		  }
 		  else
 		  {
@@ -77,6 +79,8 @@ class profile_GR extends Controller
 		  $profileData->visiblilty = $visiblity;
 		  $profileData->IsDelivery = $isDelivery;
 		  $profileData->DCharge = $DCharge;
+		  $profileData->mobile1 = $phoneno;
+		  $profileData->mobile2 = $phoneno2;
 		  
 		  if($nametoupload != ''){
 		  		$profileData->pic = $nametoupload;

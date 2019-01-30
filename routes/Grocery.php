@@ -32,6 +32,9 @@
 		Route::post('Retailer/getOffer', 'API\Groceries\offerController@getOffer');
 		Route::post('Retailer/setOffer', 'API\Groceries\offerController@setOffer');
 		Route::post('Retailer/getPOrder', 'API\Groceries\OrderC@getPackedOrder');
+		Route::post('Retailer/getProductList', 'API\Groceries\ProductController@getShpProduct');
+		Route::post('Retailer/getRPList', 'API\Groceries\ProductController@getRestProductList');
+		Route::post('Retailer/addProduct', 'API\Groceries\ProductController@addProductItem');
 	});
 	
 		
