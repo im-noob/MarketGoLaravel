@@ -118,7 +118,7 @@ class RProductController extends Controller
 		return response()->json(['data' => $data,'total'=>$total]);
     }
 
-    public function getRestProductList(Request $request){
+    public function RestSearchData(Request $request){
 
     	$shop_id = $request->json()->all()['id'];// $_POST['id'];
     	$search = $request->json()->all()['search'];
