@@ -54,7 +54,7 @@ class OrderC extends Controller
             ->join('gro_menufacture_tab','gro_map_tab.menu_id','=','gro_menufacture_tab.menu_id')
             ->join('gro_product_list_tab','gro_map_tab.gro_produt_list_id','=','gro_product_list_tab.gro_product_list_id')
             ->join('unit_tab','gro_map_tab.unit_id','=','unit_tab.unit_id')
-            ->select("gro_product_shop_tab.gro_price","gro_product_shop_tab.quantity","gro_product_list_tab.gro_product_name","gro_product_list_tab.gro_product_name","gro_order_tab.*","gro_menufacture_tab.menu_name","unit_tab.unit_name")
+            ->select("gro_product_shop_tab.gro_price","gro_product_shop_tab.quantity","gro_product_list_tab.gro_product_name","gro_product_list_tab.pic","gro_order_tab.*","gro_menufacture_tab.menu_name","unit_tab.unit_name")
             ->where('gro_order_tab.gro_cart_id','=',$id)
             ->get();
 
