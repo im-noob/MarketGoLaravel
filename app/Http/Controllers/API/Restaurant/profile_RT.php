@@ -9,7 +9,6 @@ class profile_RT extends Controller
 {
      public $successStatus = 200;
 
-
     public function UpdateProfile(Request $request){
     	
     	  $request_data = $request->all();
@@ -30,7 +29,7 @@ class profile_RT extends Controller
 
         $FILES = $_FILES["photo"];
         $name1 = 'Shop_id_'.$id.'/';
-        $upload_dir = storage_path('app/public/Profie/'.$name1);
+        $upload_dir = storage_path('app/public/Resto/Profie/'.$name1);
         // create folder if not exists
         if (!file_exists($upload_dir)) {
           mkdir($upload_dir, 0777, true);
@@ -51,7 +50,7 @@ class profile_RT extends Controller
          if (move_uploaded_file($FILES["tmp_name"], $target_file))
          { 
             //global $nametoupload;
-            $nametoupload = 'http://gomarket.ourgts.com/storage/app/public/Profie/'.$name1.$target_file1.'.'.$imageFileType;
+            $nametoupload = 'http://gomarket.ourgts.com/storage/app/public/Resto/Profie/'.$name1.$target_file1.'.'.$imageFileType;
           }
           else
           {

@@ -8,8 +8,8 @@ use App\GroceriesModel\ProfileGR;
 
 class profile_GR extends Controller
 {
-	    public $successStatus = 200;
-
+	public $successStatus = 200;
+	
     public function UpdateProfile(Request $request){
 
     	//$Data = $request->all();
