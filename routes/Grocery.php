@@ -25,7 +25,7 @@
 		Route::post('Grocery/Order/History/Item','API\Groceries\OrderSet@getOrderListItem');
 		Route::post('Grocery/Order/History','API\Groceries\OrderSet@getOrderList');
 		Route::post('Recent','API\Groceries\OrderSet@getRecentListItem');
-		Route::post('feedback','API\Groceries\OrderSet@feedback')
+		Route::post('feedback','API\Groceries\OrderSet@feedback');
 		
 		Route::post('profileGR', 'API\Groceries\profile_GR@UpdateProfile');
 		Route::post('Retailer/UpdateOrder', 'API\Groceries\RQuery@UpdateOrder');

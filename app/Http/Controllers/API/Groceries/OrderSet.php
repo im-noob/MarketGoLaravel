@@ -144,14 +144,14 @@ class OrderSet extends Controller
     }
 	
 	//UPDATE feedback and rating
-	public function feedback(Request request)
+	public function feedback(Request $request)
 	{
 		/**UPDATE `gro_cart_tab` SET `rating`='2',`feedback`='This product is not good'
 		WHERE `gro_cart_id`=2*/
 		
 		DB::table('gro_cart_tab')
-            ->where('gro_cart_id','=',request->cartID)
-            ->update([['feedback' => request->remark],['rating'=>request->star]]);
+            ->where('gro_cart_id','=',$request->cartID)
+            ->update(['feedback' => $request->remark,'rating'=>$request->star]);
 			
 		return response()->json(['data' => "true"]);
 	}
