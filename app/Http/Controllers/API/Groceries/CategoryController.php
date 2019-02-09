@@ -90,7 +90,9 @@ class CategoryController extends Controller
 	    $data = DB::table('gro_product_shop_tab')
                         ->join('gro_shop_info_tab','gro_shop_info_tab.gro_shop_info_id','=','gro_product_shop_tab.gro_shop_info_id')
                        ->join('users','gro_shop_info_tab.user_id','=','users.id')
-					   ->select('gro_shop_info_tab.name','gro_product_shop_tab.gro_map_id','users.noti_token','gro_shop_info_tab.city','gro_shop_info_tab.address','gro_shop_info_tab.gro_shop_info_id','gro_shop_info_tab.state','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.gro_product_shop_id')
+					   ->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
+   		
+					   ->select('gro_shop_info_tab.name','gro_product_shop_tab.gro_map_id','users.noti_token','gro_shop_info_tab.city','gro_shop_info_tab.address','gro_shop_info_tab.gro_shop_info_id','gro_shop_info_tab.state','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.gro_product_shop_id','unit_tab.unit_name')
                         ->where('gro_product_shop_tab.gro_map_id','=',$mapID[0]->gro_map_id)
                         ->simplePaginate(100);
       //  var_dump($data);	$mapID[0]->gro_map_id
