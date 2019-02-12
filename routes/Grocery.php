@@ -1,5 +1,6 @@
 <?php
 	Route::get('gro_category','API\Groceries\CategoryController@categoryGet');
+	Route::get('cat','API\Groceries\CategoryController@category_subGet');
 
 	Route::post('gro_subCategory','API\Groceries\CategoryController@subCategoryGet');
 	// Route::get('gro_productList','API\Groceries\CategoryController@subProductGet');
@@ -7,6 +8,7 @@
 	// Route::post('gro_unit','API\Groceries\CategoryController@unitGet');
 	Route::post('gro_product','API\Groceries\CategoryController@productGet');
 	Route::post('gro_product_shop','API\Groceries\CategoryController@RelatedShopsGet');
+	Route::post('gro/search','API\Filter\SearchController@groSearch');
 	
 	
 	
@@ -46,6 +48,7 @@
 		
 	Route::get('Retailer/getCatrgory', 'API\Groceries\RQuery@getCategory');
 	Route::post('Retailer/AddCategory', 'API\Groceries\RQuery@AddCategory');
+	
 	
 	
 		

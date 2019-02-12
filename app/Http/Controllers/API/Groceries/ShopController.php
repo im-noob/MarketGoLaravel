@@ -16,7 +16,7 @@ class ShopController extends Controller
 		->where("gro_shop_info_tab.visiblilty","=",1)
 		->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 	public function categoryGet(Request $request)
@@ -34,7 +34,7 @@ class ShopController extends Controller
 		->orderBy('gro_cat_tab.gro_cat_id')
 		->simplePaginate(20);
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 		/** Sub category of category*/
@@ -51,7 +51,7 @@ class ShopController extends Controller
 			->distinct()
 			->simplePaginate(20);
 		
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 		/** Product of category*/
@@ -72,7 +72,7 @@ class ShopController extends Controller
 		->simplePaginate(20);
 
         
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 	/** Product  price */
@@ -84,8 +84,8 @@ class ShopController extends Controller
 		$totalProductmap=array();
 		$totalProductQuantity=array();
 		foreach($values as $value){
-		  array_push($totalProductmap,$value["gro_map_id"]);
-		  array_push($totalProductQuantity,$value["quantity"]);
+		  array_push($totalProductmap,$value["map"]);
+		  array_push($totalProductQuantity,$value["size"]);
 		 // var_dump($value["quantity"]);
 		}
 		//var_dump($shopID);
@@ -94,14 +94,14 @@ class ShopController extends Controller
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
 
 		->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-	   ->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_shop_info_id','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_product_shop_id','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
+	   ->select('gro_product_list_tab.gro_product_name as title','gro_map_tab.gro_cat_id as mapcid','gro_product_shop_tab.gro_shop_info_id as shopID','gro_product_shop_tab.offer as offer','gro_product_shop_tab.gro_price as price','gro_product_shop_tab.quantity as size','gro_product_shop_tab.gro_product_shop_id as spid','gro_product_shop_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as pid','gro_product_list_tab.gro_product_info as info','gro_product_list_tab.pic as pic','unit_tab.unit_name as unit')
 
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
         ->whereIn('gro_product_shop_tab.gro_map_id',$totalProductmap)
 		
         ->distinct()
 
-		->orderBy('gro_map_tab.gro_cat_id')
+		->orderBy('mapcid')
 		->simplePaginate(20);
 		// ->whereIn([['gro_product_shop_tab.gro_map_id','=',$totalProductmap],['gro_product_shop_tab.quantity','=',$totalProductQuantity],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
        // var_dump($datas);
@@ -110,12 +110,12 @@ class ShopController extends Controller
 		foreach($datas as $data)
 		{
 			foreach($values as $value)
-			{
+			{ 
 
-				if($data->quantity == $value["quantity"] && $data->gro_map_id == $value["gro_map_id"] && $data->unit_name == $value["unit_name"] && $data->gro_shop_info_id == $shopID )
+				if($data->size == $value["size"] && $data->map == $value["map"] && $data->unit == $value["unit"] && $data->shopID == $shopID )
 				{
 					$data->Quantity = $value["Quantity"];
-					$data->price = $value["Quantity"] * $data->gro_price- (($data->gro_price * $data->offer)/100);
+					$data->price = $value["Quantity"] * $data->price- (($data->price * $data->offer)/100);
 					$price  = $price + $data->price;
 					array_push($returnArray,$data);
 				}
@@ -124,6 +124,6 @@ class ShopController extends Controller
 
 		
        // var_dump($returnArray);
-       return response()->json(['data' => $returnArray,'price'=>$price]);
+       return response()->json(['data' => $returnArray,'price'=>$price,'received'=>'yes']);
     }
 }
