@@ -27,12 +27,12 @@ class ShopController extends Controller
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")
-		
-		->select("gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic")
+		->join('gro_subcat_tab','gro_subcat_tab.gro_subcat_id','=','gro_map_tab.gro_subcat_id')
+		->select('gro_subcat_tab.subcat_name','gro_subcat_tab.pic as spic','gro_subcat_tab.gro_subcat_id',"gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic As cpic")
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
 		->distinct()
 		->orderBy('gro_cat_tab.gro_cat_id')
-		->simplePaginate(20);
+		->get();
 
         return response()->json(['data' => $data,'received'=>'yes']);
     }
@@ -57,22 +57,19 @@ class ShopController extends Controller
 		/** Product of category*/
 	public function productGet(Request $request)
     {
-         $value=$request->id;
+        $value=$request->id;
 		$shopID=$request->Shopid;
-    
-		$data = DB::table('gro_product_shop_tab')
-		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
-		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
 
-        ->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-   		->select('gro_product_list_tab.gro_product_name','gro_product_shop_tab.inStock','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
-        ->where([['gro_map_tab.gro_subcat_id','=',$value],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
-        ->distinct()
-		->orderBy('gro_map_tab.gro_cat_id')
-		->simplePaginate(20);
+		$data = DB::table('gro_product_shop_tab As shop')
+				->join("unit_tab", "unit_tab.unit_id","=","shop.unit_id")
+				->join("gro_map_tab As map", "map.gro_map_id","=","shop.gro_map_id")
+				->join('gro_product_list_tab As gpl','gpl.gro_product_list_id','=','map.gro_produt_list_id')
+				->select('gpl.gro_product_name As name','shop.inStock as stock','map.gro_cat_id as cid','shop.gro_price as price','shop.quantity','shop.gro_map_id as mid','gpl.gro_product_list_id as plid','gpl.gro_product_info as pinfo','gpl.pic','unit_tab.unit_name')
+				->where([["shop.gro_shop_info_id","=",$shopID],['map.gro_subcat_id','=',$value]])
+				->orderBy('map.gro_map_id')
+				->get();
 
-        
-        return response()->json(['data' => $data,'received'=>'yes']);
+		return response()->json(['data' => $data]);		
     }
 	
 	/** Product  price */

@@ -10,8 +10,8 @@ class ProductController extends Controller
 {
     public function getShpProduct(Request $request){
 
-    	$shop_id = $request->json()->all()['id'];// $_POST['id'];
-    	$cur = $request->json()->all()['cur'];
+    	$shop_id =  $request->json()->all()['id'];
+    	// $cur = $request->json()->all()['cur'];
 
     	$data1 = DB::table('gro_product_shop_tab')
 				->select("gro_map_id")
@@ -41,7 +41,36 @@ class ProductController extends Controller
 				->skip(0)->take(100)
 				->get();
 
-		return response()->json(['data' => $data,'total'=>$total]);
+		$data2 = array();
+
+		foreach ($data as $key => $value) {
+			$temp = DB::table('gro_product_shop_tab')
+				->select("gro_product_shop_tab.*","unit_tab.unit_name")
+				->join('unit_tab','unit_tab.unit_id','gro_product_shop_tab.unit_id')
+				->where([['gro_shop_info_id','=',$shop_id],['gro_map_id','=',$value->gro_map_id]])
+				->get();
+
+			$tempArray = [
+				'gro_cat_id' =>$value->gro_cat_id,
+				'gro_cat_name' =>$value->gro_cat_name,
+				'gro_subcat_id' =>$value->gro_subcat_id,
+				'subcat_name' =>$value->subcat_name,
+				'menu_name' =>$value->menu_name,
+				'gro_map_id' =>$value->gro_map_id,
+				'gro_product_list_id' =>$value->gro_product_list_id,
+				'gro_product_name' =>$value->gro_product_name,
+				'gro_product_info' =>$value->gro_product_info,
+				'pic' =>$value->pic,
+				'tags' =>$value->tags,
+				'data' =>$temp, 
+
+			];
+			
+			//var_dump($temp);
+			array_push($data2,$tempArray);
+		}
+
+		return response()->json(['data' => $data2,'total'=>$total]);
     }
 
     public function getProduct(Request $request){

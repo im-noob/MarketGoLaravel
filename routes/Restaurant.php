@@ -29,7 +29,7 @@
 
 
 
-		Route::post('profileGR', 'API\Restaurant\profile_RT@UpdateProfile');
+		Route::post('profileRT', 'API\Restaurant\profile_RT@UpdateProfile');
 		Route::post('Restaurant/UpdateOrder', 'API\Restaurant\RestaurantOrderController@UpdateOrder');
 		Route::post('Restaurant/getOrder', 'API\Restaurant\RestaurantOrderController@getActiveOrder');
 		Route::post('Restaurant/getOrderItem', 'API\Restaurant\RestaurantOrderController@getOrderedItem');

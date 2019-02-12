@@ -28,7 +28,6 @@
 		Route::post('Grocery/Order/History','API\Groceries\OrderSet@getOrderList');
 		Route::post('Recent','API\Groceries\OrderSet@getRecentListItem');
 		Route::post('feedback','API\Groceries\OrderSet@feedback');
-		
 		Route::post('profileGR', 'API\Groceries\profile_GR@UpdateProfile');
 		Route::post('Retailer/UpdateOrder', 'API\Groceries\RQuery@UpdateOrder');
 		Route::post('Retailer/getOrder', 'API\Groceries\OrderC@getActiveOrder');
@@ -43,14 +42,11 @@
 		Route::post('Retailer/getProduct', 'API\Groceries\ProductController@getProduct');
 		Route::POST('Retailer/searchP', 'API\Groceries\ProductController@ShopSearchData');
 		Route::POST('Retailer/searchR', 'API\Groceries\ProductController@RestSearchData');
+		Route::post('logoutGR', 'API\Groceries\Authentication@logout');
 	});
 	
 		
 	Route::get('Retailer/getCatrgory', 'API\Groceries\RQuery@getCategory');
 	Route::post('Retailer/AddCategory', 'API\Groceries\RQuery@AddCategory');
-	
-	
-	
-		
 		
 ?>
