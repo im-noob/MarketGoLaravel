@@ -48,9 +48,5 @@
 		
 	Route::get('Retailer/getCatrgory', 'API\Groceries\RQuery@getCategory');
 	Route::post('Retailer/AddCategory', 'API\Groceries\RQuery@AddCategory');
-	
-	
-	
-		
 		
 ?>
