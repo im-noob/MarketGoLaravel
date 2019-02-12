@@ -104,7 +104,7 @@ class ShopController extends Controller
 		->orderBy('mapcid')
 		->simplePaginate(20);
 		// ->whereIn([['gro_product_shop_tab.gro_map_id','=',$totalProductmap],['gro_product_shop_tab.quantity','=',$totalProductQuantity],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
-       // var_dump($datas);
+      // var_dump($datas);
 	   $price=0;
 	   $returnArray=array();
 		foreach($datas as $data)
