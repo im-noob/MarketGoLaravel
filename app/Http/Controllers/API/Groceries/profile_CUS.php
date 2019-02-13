@@ -4,10 +4,14 @@ namespace App\Http\Controllers\API\Groceries;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\User; 
+use Illuminate\Support\Facades\Auth; 
+use Validator;
+use Illuminate\Support\Facades\DB;
 
 class profile_CUS extends Controller
 {
+	public $successStatus = 200;
 	//supproting function
 	function gerProfileData($id,$phone,$email){
         $profileData = DB::table('customer_info_tab')->select('customer_info_id','cname','state','city','location','address','pic','cpin','user_id')
@@ -34,7 +38,7 @@ class profile_CUS extends Controller
                         ->where('id', '=', $id)
                         ->get();
 
-        return($this->gerProfileData($userID,$wor_info_id[0]->phone,$wor_info_id[0]->email));
+        return($this->gerProfileData($id,$wor_info_id[0]->phone,$wor_info_id[0]->email));
     }
 
     public function setProfileBasicDetails(Request $request) 
@@ -42,11 +46,11 @@ class profile_CUS extends Controller
         
         $incomingData = $request->json()->all();
         
-        $profile_name = $incomingData['profile_name'],
-        $profile_phonheno = $incomingData['profile_phonheno'],
-        $profile_email = $incomingData['profile_email'],
+        $profile_name = $incomingData['profile_name'];
+        $profile_phonheno = $incomingData['profile_phonheno'];
+        $profile_email = $incomingData['profile_email'];
 
-        $userID = $incomingData['userID'],
+        $userID = $incomingData['userID'];
 
         DB::table('customer_info_tab')
             ->where('user_id', $userID)
@@ -55,7 +59,7 @@ class profile_CUS extends Controller
             ]);
 
        DB::table('users')
-        ->where('user_id', $userID)
+        ->where('id', $userID)
         ->update([
         	'name' => $profile_name,
         	'email' => $profile_email,
@@ -76,11 +80,13 @@ class profile_CUS extends Controller
         
         $incomingData = $request->json()->all();
 
-        $shipping_state = $incomingData['shipping_state'],
-        $shipping_city = $incomingData['shipping_city'],
-        $shipping_street = $incomingData['shipping_street'],
-        $shipping_pincode = $incomingData['shipping_pincode'],
+        $shipping_state = $incomingData['shipping_state'];
+        $shipping_city = $incomingData['shipping_city'];
+        $shipping_street = $incomingData['shipping_street'];
+        $shipping_pincode = $incomingData['shipping_pincode'];
 
+        $userID = $incomingData['userID'];
+        
 
         DB::table('customer_info_tab')
             ->where('user_id', $userID)
@@ -91,7 +97,6 @@ class profile_CUS extends Controller
             	'cpin' => $shipping_pincode,
             ]);
 
-        $userID = $incomingData['userID'],
         $data = $this->getPhoneAndEmail($userID);
         return response()->json([
         		'data' => $data,
