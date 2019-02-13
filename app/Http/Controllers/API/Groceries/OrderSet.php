@@ -60,9 +60,9 @@ class OrderSet extends Controller
 		->select("gro_cart_tab.gro_cart_id","gro_cart_tab.real_amt", 
 		"gro_cart_tab.offer_amt", "gro_cart_tab.paid_amt", "gro_cart_tab.customer_info_id",
 		"gro_cart_tab.status","gro_cart_tab.gro_shop_info_id", "gro_cart_tab.rating",
-		"gro_cart_tab.feedback", "gro_cart_tab.created_at")
+		"gro_cart_tab.feedback", "gro_cart_tab.created_at","gro_shop_info_tab.name")
 		->where("gro_cart_tab.customer_info_id","=",$request->userID)
-		->orderBy("gro_cart_tab.created_at")
+		->orderBy("gro_cart_tab.created_at",'desc')
 		->simplePaginate(20);
 
         return response()->json(['data' => $data]);
@@ -129,7 +129,7 @@ class OrderSet extends Controller
 		 foreach($data as $da)
 		 {
 			 $i=0;
-			 var_dump($da);
+			// var_dump($da);
 			 foreach($freshArray as $fresh)
 			 {
 				if($fresh->gro_product_name == $da->gro_product_name) 
@@ -138,9 +138,21 @@ class OrderSet extends Controller
 			 if($i == 0)
 			 array_push($freshArray,$da);
 		 }
-		// var_dump($freshArray);*/
+		// var_dump($freshArray); $freshArray*/
 
-      return response()->json(['data' => $freshArray]);
-	   
+      return response()->json(['data' =>$freshArray]); 
     }
+	
+	//UPDATE feedback and rating
+	public function feedback(Request $request)
+	{
+		/**UPDATE `gro_cart_tab` SET `rating`='2',`feedback`='This product is not good'
+		WHERE `gro_cart_id`=2*/
+		
+		DB::table('gro_cart_tab')
+            ->where('gro_cart_id','=',$request->cartID)
+            ->update(['feedback' => $request->remark,'rating'=>$request->star]);
+			
+		return response()->json(['data' => "true"]);
+	}
 }

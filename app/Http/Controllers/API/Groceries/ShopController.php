@@ -12,9 +12,11 @@ class ShopController extends Controller
         $data = DB::table('gro_shop_info_tab')
 		->join('users','gro_shop_info_tab.user_id','=','users.id')
 					  
-		->select('users.noti_token',"gro_shop_info_tab.*")->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
+		->select('users.noti_token',"gro_shop_info_tab.*")
+		->where("gro_shop_info_tab.visiblilty","=",1)
+		->orderBy('gro_shop_info_tab.gro_shop_info_id')->simplePaginate(10);
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 	public function categoryGet(Request $request)
@@ -25,14 +27,14 @@ class ShopController extends Controller
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")
-		
-		->select("gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic")
+		->join('gro_subcat_tab','gro_subcat_tab.gro_subcat_id','=','gro_map_tab.gro_subcat_id')
+		->select('gro_subcat_tab.subcat_name','gro_subcat_tab.pic as spic','gro_subcat_tab.gro_subcat_id',"gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic As cpic")
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
 		->distinct()
 		->orderBy('gro_cat_tab.gro_cat_id')
-		->simplePaginate(20);
+		->get();
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 		/** Sub category of category*/
@@ -49,28 +51,25 @@ class ShopController extends Controller
 			->distinct()
 			->simplePaginate(20);
 		
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,'received'=>'yes']);
     }
 	
 		/** Product of category*/
 	public function productGet(Request $request)
     {
-         $value=$request->id;
+        $value=$request->id;
 		$shopID=$request->Shopid;
-    
-		$data = DB::table('gro_product_shop_tab')
-		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
-		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
 
-        ->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-   		->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
-        ->where([['gro_map_tab.gro_subcat_id','=',$value],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
-        ->distinct()
-		->orderBy('gro_map_tab.gro_cat_id')
-		->simplePaginate(20);
+		$data = DB::table('gro_product_shop_tab As shop')
+				->join("unit_tab", "unit_tab.unit_id","=","shop.unit_id")
+				->join("gro_map_tab As map", "map.gro_map_id","=","shop.gro_map_id")
+				->join('gro_product_list_tab As gpl','gpl.gro_product_list_id','=','map.gro_produt_list_id')
+				->select('shop.gro_product_shop_id as psid','gpl.gro_product_name As name','shop.inStock as stock','map.gro_cat_id as cid','shop.gro_price as price','shop.quantity','shop.gro_map_id as mid','gpl.gro_product_list_id as plid','gpl.gro_product_info as pinfo','gpl.pic','unit_tab.unit_name')
+				->where([["shop.gro_shop_info_id","=",$shopID],['map.gro_subcat_id','=',$value]])
+				->orderBy('map.gro_map_id')
+				->get();
 
-        
-        return response()->json(['data' => $data]);
+		return response()->json(['data' => $data]);		
     }
 	
 	/** Product  price */
@@ -82,8 +81,8 @@ class ShopController extends Controller
 		$totalProductmap=array();
 		$totalProductQuantity=array();
 		foreach($values as $value){
-		  array_push($totalProductmap,$value["gro_map_id"]);
-		  array_push($totalProductQuantity,$value["quantity"]);
+		  array_push($totalProductmap,$value["map"]);
+		  array_push($totalProductQuantity,$value["size"]);
 		 // var_dump($value["quantity"]);
 		}
 		//var_dump($shopID);
@@ -92,28 +91,28 @@ class ShopController extends Controller
 		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
 
 		->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-	   ->select('gro_product_list_tab.gro_product_name','gro_map_tab.gro_cat_id','gro_product_shop_tab.gro_shop_info_id','gro_product_shop_tab.offer','gro_product_shop_tab.gro_price','gro_product_shop_tab.quantity','gro_product_shop_tab.gro_product_shop_id','gro_product_shop_tab.gro_map_id','gro_product_list_tab.gro_product_list_id','gro_product_list_tab.gro_product_info','gro_product_list_tab.pic','unit_tab.unit_name')
+	   ->select('gro_product_list_tab.gro_product_name as title','gro_map_tab.gro_cat_id as mapcid','gro_product_shop_tab.gro_shop_info_id as shopID','gro_product_shop_tab.offer as offer','gro_product_shop_tab.gro_price as price','gro_product_shop_tab.quantity as size','gro_product_shop_tab.gro_product_shop_id as spid','gro_product_shop_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as pid','gro_product_list_tab.gro_product_info as info','gro_product_list_tab.pic as pic','unit_tab.unit_name as unit')
 
 		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
         ->whereIn('gro_product_shop_tab.gro_map_id',$totalProductmap)
 		
         ->distinct()
 
-		->orderBy('gro_map_tab.gro_cat_id')
+		->orderBy('mapcid')
 		->simplePaginate(20);
 		// ->whereIn([['gro_product_shop_tab.gro_map_id','=',$totalProductmap],['gro_product_shop_tab.quantity','=',$totalProductQuantity],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
-       // var_dump($datas);
+      // var_dump($datas);
 	   $price=0;
 	   $returnArray=array();
 		foreach($datas as $data)
 		{
 			foreach($values as $value)
-			{
+			{ 
 
-				if($data->quantity == $value["quantity"] && $data->gro_map_id == $value["gro_map_id"] && $data->unit_name == $value["unit_name"] && $data->gro_shop_info_id == $shopID )
+				if($data->size == $value["size"] && $data->map == $value["map"] && $data->unit == $value["unit"] && $data->shopID == $shopID )
 				{
 					$data->Quantity = $value["Quantity"];
-					$data->price = $value["Quantity"] * $data->gro_price- (($data->gro_price * $data->offer)/100);
+					$data->price = $value["Quantity"] * $data->price- (($data->price * $data->offer)/100);
 					$price  = $price + $data->price;
 					array_push($returnArray,$data);
 				}
@@ -122,6 +121,6 @@ class ShopController extends Controller
 
 		
        // var_dump($returnArray);
-       return response()->json(['data' => $returnArray,'price'=>$price]);
+       return response()->json(['data' => $returnArray,'price'=>$price,'received'=>'yes']);
     }
 }

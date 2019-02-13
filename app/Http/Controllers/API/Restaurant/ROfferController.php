@@ -1,30 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\API\Groceries;
+namespace App\Http\Controllers\API\Restaurant;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class offerController extends Controller
+class ROfferController extends Controller
 {
     public function getOffer(Request $request){
 
        $id = $request->json()->all()['id'];
-       $data = DB::table('gro_offer_table')
-				->where('gro_shop_info_id','=',$id)
+       $data = DB::table('resto_offer_table')
+				->where('resto_offer_id','=',$id)
 				->get();
 
         return response()->json(['data' => $data]);
 
     }
-
     public function setOffer(Request $request){
-
-	  
-      //$Data = $request->all();
-	  
-	  //return response()->json(['request' => $Data,'File'=>$_FILES,'post'=>$_POST]);
 
       $comment = $_POST['comment'];
       $end_date = $_POST['end_date'];
@@ -42,8 +36,8 @@ class offerController extends Controller
       if(isset($_FILES["photo"])){
 
     	  $FILES = $_FILES["photo"];
-	      $name = 'Shop_id_'.$shop_id.'/';
-		  $upload_dir = storage_path('app/public/offer/'.$name);
+	      $name = 'Resto_id_'.$shop_id.'/';
+		  $upload_dir = storage_path('app/public/Resto/offer/'.$name);
 		  // create folder if not exists
 		  if (!file_exists($upload_dir)) {
 		    mkdir($upload_dir, 0777, true);
@@ -74,37 +68,39 @@ class offerController extends Controller
       }
 
       $UpdateData = array(
-	              'gro_shop_info_id' => $shop_id,
-	              'gro_offer_name' => $offer_name,
-	              'gro_offer_from' => $startDate,
-	              'gro_offer_to' => $end_date,
-	              'gro_offer_minBalance' => $offer_min_balance,
-	              'gro_offer_type' => $offer_type,  
-	              'gro_offer_value' => $offer_value,
-	              'gro_offer_status' => $status,
-	              'gro_offer_comment'=>$comment,
+	              'resto_info_id' => $shop_id,
+	              'resto_offer_name' => $offer_name,
+	              'resto_offer_from' => $startDate,
+	              'resto_offer_to' => $end_date,
+	              'resto_offer_minBalance' => $offer_min_balance,
+	              'resto_offer_type' => $offer_type,  
+	              'resto_offer_value' => $offer_value,
+	              'resto_offer_status' => $status,
+	              'resto_offer_comment'=>$comment,
 	            );
 
 
       	if($operation == "Edit"){
       		if ($nametoupload != '') {
-	      		$UpdateData['gro_offer_pic'] = $nametoupload; 
+	      		$UpdateData['resto_offer_pic'] = $nametoupload; 
 	      	}
-		  	DB::table('gro_offer_table')
-	            ->where('gro_offer_id', '=', $offer_id)
+		  	DB::table('resto_offer_table')
+	            ->where('resto_offer_id', '=', $offer_id)
 	            ->update($UpdateData);
 	  	}
 	  	else{
 	  		if ($nametoupload != '') {
-	      		$UpdateData['gro_offer_pic'] = $nametoupload; 
+	      		$UpdateData['resto_offer_pic'] = $nametoupload; 
 	      	}
 	      	else
 	  		{
-	  			$UpdateData['gro_offer_pic'] = 'ImageNotFound.png';		
+	  			$UpdateData['resto_offer_pic'] = 'ImageNotFound.png';		
 	  		}
-	  		DB::table('gro_offer_table')->insert($UpdateData);
+	  		DB::table('resto_offer_table')->insert($UpdateData);
 	  	}
 
 	  	return response()->json(['Success'=>'Updated Successfully.']);     
     }
+
+
 }

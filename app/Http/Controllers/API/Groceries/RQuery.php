@@ -27,7 +27,6 @@ class RQuery extends Controller
 
         foreach ($data as $key => $value) {
         	$arrayName = array("gro_subcat_id"=>$value->gro_subcat_id,"gro_cat_id"=>$value->gro_cat_id,"subcat_name"=>$value->subcat_name,"gro_cat_name"=>$value->gro_cat_name,"Status"=>0);
-
         	array_push($data1,$arrayName);
         }
 
