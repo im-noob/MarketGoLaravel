@@ -41,7 +41,7 @@ class ServicesController extends Controller
     }
     public function ServiceManList_get(Request $request){
         $subcatID = $request->json()->all()['subcategoryID'];
-        $data = [
+        /*$data = [
                     [
                       "info_id"=>"1",
                       "avtar_url"=>"https://instagram.fpat1-1.fna.fbcdn.net/vp/84c4e443d47dc2aa70a613a017a4c001/5CBB0AAC/t51.2885-19/s150x150/31908285_2109461939310314_4190149362170462208_n.jpg?_nc_ht=instagram.fpat1-1.fna.fbcdn.net",
@@ -75,12 +75,30 @@ class ServicesController extends Controller
                       "rate"=>"918"
                     ]
                 ];
+*/
+
+        $data = DB::table('wor_rate_tab')
+                  ->join('wor_info_tab','wor_info_tab.wor_info_id','=','wor_rate_tab.wor_info_id')
+                  ->select(
+                    'wor_info_tab.wor_info_id as info_id',
+                    'name as name',
+                    'pic as avtar_url',
+                    'rating as ratting',
+                    'no_of_work',
+                    'no_of_profile_view as review',
+                    DB::raw('(min_price + max_price)/2 as rate')
+                  )
+                  ->where('wor_subcat_id', '=', $subcatID)
+                  
+                  ->orderBy('no_of_work', 'desc')
+                  ->get();
+
 
         return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$subcatID],$this->successStatus);
     }
     public function renderProfileData_get(Request $request){
         $wor_serviceManPorifleID = $request->json()->all()['profileID'];
-        $data = [
+        /*$data = [
                     'avtar'=>'https://instagram.fpat1-1.fna.fbcdn.net/vp/84c4e443d47dc2aa70a613a017a4c001/5CBB0AAC/t51.2885-19/s150x150/31908285_2109461939310314_4190149362170462208_n.jpg?_nc_ht=instagram.fpat1-1.fna.fbcdn.net',
                     'name'=>'Aarav Kumar',
                     'searched'=>'100',
@@ -104,6 +122,77 @@ class ServicesController extends Controller
                     'contactNo'=>'1234567890',
                     'workerID'=>'34',
                 ];
+*/
+
+        $wor_info_tab = DB::table('wor_info_tab')
+                  ->join('users','users.id','=','wor_info_tab.wor_info_id')
+                  ->select(
+                    'wor_info_id as workerID',
+                    'wor_info_tab.name as name', 
+                    'work_exp as experi', 
+                    'no_of_profile_view as searched',  
+                    'no_of_work as contract',
+                    'rating as ratting',
+                    'pic as avtar',
+                    'phone as contactNo',
+                    'state', 
+                    'city', 
+                    'pin_code', 
+                    'address',
+                    'work_hour'
+                  )
+                  ->where('wor_info_id', '=', $wor_serviceManPorifleID)
+                  ->get();
+
+        $data = [];
+        foreach ($wor_info_tab as $key => $value) {
+            $data = [
+                    'avtar'=>$value->avtar,
+                    'name'=>$value->name,
+                    'searched'=>$value->searched,
+                    'contract'=>$value->contract,
+                    'ratting'=>$value->ratting,
+                    'experi'=>$value->experi,
+                    'contactNo'=>$value->contactNo,
+                    'workerID'=>$value->workerID,
+                    'addList'=>[
+                        [   'key'=>'State','value'=>$value->state],
+                        [   'key'=>'City','value'=>$value->city],
+                        [   'key'=>'Pincode','value'=>$value->pin_code],
+                        [   'key'=>'Address','value'=>$value->address],
+                    ],
+                    'startHour'=>explode('-',$value->work_hour)[0],
+                    'endHour'=>explode('-',$value->work_hour)[1],
+                    'workList' => [
+                        [   'key'=>'Temp Reparing','value'=>'4000-8524' , 'workSubCatId'=>'6'],
+                        [   'key'=>'Computer Reparing','value'=>'500-855', 'workSubCatId'=>'3'],
+                        [   'key'=>'HDD','value'=>'8000-8855', 'workSubCatId'=>'2'],
+                        [   'key'=>'Wirring','value'=>'5150-6520', 'workSubCatId'=>'15'],
+                    ]
+                    
+                ];
+
+                //geting work list 
+                $wor_rate_tab = DB::table('wor_rate_tab')
+                        ->join('wor_subcat_tab', 'wor_subcat_tab.wor_subcat_id', '=', 'wor_rate_tab.wor_subcat_id')
+                        ->where('wor_info_id', '=', $wor_serviceManPorifleID)
+                        ->get();
+                //making a aaray 
+                $i = 1; 
+                $temp_price = [];
+                foreach ($wor_rate_tab as $key => $value) {
+                  $arr = [  
+                          'list_id' => $i,
+                          'workSubCatId' => $value->wor_subcat_id,
+                          'value' => $value->min_price."-".$value->max_price,
+                          // 'category' => $value->wor_subcat_id,
+                          'key' => $value->subcat_name,
+                  ];
+                  $i = $i + 1;
+                  array_push($temp_price,$arr);
+                }
+                $data['workList'] = $temp_price;
+        }
 
         return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$wor_serviceManPorifleID],$this->successStatus);
     }
@@ -117,97 +206,173 @@ class ServicesController extends Controller
         $data = [
                     
                 ];
+        //sendng all data to work info table 
+        DB::table('wor_order_tab')->insert(
+            [
+              'wor_info_id' => $wor_info_id,
+              'wor_subcat_id' => $wor_subcat_id,
+              'customer_info_Id' => $customer_info_Id,
+              'message' => $message,
+              'title' => $title,
+              'bill_list' => '[{"list_id":"1","price":"00","work":"Work Name"}]',
+              'workPorgressStatus' => '0',              
+            ]
+        );
 
-        return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$request],$this->successStatus);
+        return response()->json(['received'=>'yes','data'=>$data,'return_test'=>[
+              'wor_info_id' => $wor_info_id,
+              'wor_subcat_id' => $wor_subcat_id,
+              'customer_info_Id' => $customer_info_Id,
+              'message' => $message,
+              'title' => $title,
+              'bill_list' => '[{"list_id":"1","price":"00","work":"Work Name"}]',
+              'workPorgressStatus' => '0',              
+            ]],$this->successStatus);
     }
 
     // histyr geing
     public function ServiceHistory_get(Request $request){
-        $wor_serviceManPorifleID = $request->json()->all()['profileID'];
+        $customerID = $request->json()->all()['profileID'];
 
-        $data = [
-                    [
-                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
-                        "workerName"=>"Worker Name1",
-                        "Work"=>"Work Name1",
-                        "title"=>"Title1",
-                        "message"=>"Message1",
-                        "workPorgressStatus"=>5,
-                        "billList"=>[
-                            [
-                            "list_id"=> "11",
-                            "price"=> "501",
-                            "work"=> "Condencer1"
-                            ],
-                            [
-                            "list_id"=> "21",
-                            "price"=> "2001",
-                            "work"=> "Repairing1"
-                            ]
+        // $data = [
+        //             [
+        //                 "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+        //                 "workerName"=>"Worker Name1",
+        //                 "Work"=>"Work Name1",
+        //                 "title"=>"Title1",
+        //                 "message"=>"Message1",
+        //                 "workPorgressStatus"=>5,
+        //                 "billList"=>[
+        //                     [
+        //                     "list_id"=> "11",
+        //                     "price"=> "501",
+        //                     "work"=> "Condencer1"
+        //                     ],
+        //                     [
+        //                     "list_id"=> "21",
+        //                     "price"=> "2001",
+        //                     "work"=> "Repairing1"
+        //                     ]
+        //                 ],
+        //             ],
+        //             [
+        //                 "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+        //                 "workerName"=>"Worker Name2",
+        //                 "Work"=>"Work Name2",
+        //                 "title"=>"Title2",
+        //                 "message"=>"Message2",
+        //                 "workPorgressStatus"=>4,
+        //                 "billList"=>[
+        //                     [
+        //                     "list_id"=> "12",
+        //                     "price"=> "502",
+        //                     "work"=> "Condencer2"
+        //                     ],
+        //                     [
+        //                     "list_id"=> "22",
+        //                     "price"=> "2002",
+        //                     "work"=> "Repairing2"
+        //                     ]
+        //                 ],
+        //             ],
+        //             [
+        //                 "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+        //                 "workerName"=>"Worker Name3",
+        //                 "Work"=>"Work Name3",
+        //                 "title"=>"Title3",
+        //                 "message"=>"Message3",
+        //                 "workPorgressStatus"=>3,
+        //                 "billList"=>[
+        //                     [
+        //                     "list_id"=> "13",
+        //                     "price"=> "503",
+        //                     "work"=> "Condencer3"
+        //                     ],
+        //                     [
+        //                     "list_id"=> "23",
+        //                     "price"=> "2003",
+        //                     "work"=> "Repairing3"
+        //                     ]
+        //                 ],
+        //             ],
+        //             [
+        //                 "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
+        //                 "workerName"=>"Worker Name4",
+        //                 "Work"=>"Work Name4",
+        //                 "title"=>"Title4",
+        //                 "message"=>"Message4",
+        //                 "workPorgressStatus"=>2,
+        //                 "billList"=>[
+        //                     [
+        //                     "list_id"=> "14",
+        //                     "price"=> "504",
+        //                     "work"=> "Condencer4"
+        //                     ],
+        //                     [
+        //                     "list_id"=> "24",
+        //                     "price"=> "2004",
+        //                     "work"=> "Repairing4"
+        //                     ]
+        //                 ],
+        //             ],
+        //         ];
+
+        //$customerID = '79';
+
+        $wor_order_tab = DB::table('wor_order_tab')
+                  ->join('wor_info_tab','wor_info_tab.wor_info_id','=','wor_order_tab.wor_info_id')
+                  ->join('wor_subcat_tab','wor_subcat_tab.wor_subcat_id','=','wor_order_tab.wor_subcat_id')
+                  ->select(
+                    'wor_info_tab.pic as workerAvtar',
+                    'wor_info_tab.name as workerName', 
+                    'wor_subcat_tab.subcat_name as Work', 
+                    'title',  
+                    'message',
+                    'workPorgressStatus',
+                    'bill_list as billList'
+                    
+                  )
+                  ->where('customer_info_Id', '=', $customerID)
+                  ->get();
+
+        $data = [];
+        foreach ($wor_order_tab as $key => $value) {
+            $dataSingle = [
+                    "workerAvtar"=>$value->workerAvtar,
+                    "workerName"=>$value->workerName,
+                    "Work"=>$value->Work,
+                    "title"=>$value->title,
+                    "message"=>$value->message,
+                    "workPorgressStatus"=>$value->workPorgressStatus,
+                    "billList"=>[
+                        [
+                        "list_id"=> "11",
+                        "price"=> "501",
+                        "work"=> "Condencer1"
                         ],
-                    ],
-                    [
-                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
-                        "workerName"=>"Worker Name2",
-                        "Work"=>"Work Name2",
-                        "title"=>"Title2",
-                        "message"=>"Message2",
-                        "workPorgressStatus"=>4,
-                        "billList"=>[
-                            [
-                            "list_id"=> "12",
-                            "price"=> "502",
-                            "work"=> "Condencer2"
-                            ],
-                            [
-                            "list_id"=> "22",
-                            "price"=> "2002",
-                            "work"=> "Repairing2"
-                            ]
-                        ],
-                    ],
-                    [
-                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
-                        "workerName"=>"Worker Name3",
-                        "Work"=>"Work Name3",
-                        "title"=>"Title3",
-                        "message"=>"Message3",
-                        "workPorgressStatus"=>3,
-                        "billList"=>[
-                            [
-                            "list_id"=> "13",
-                            "price"=> "503",
-                            "work"=> "Condencer3"
-                            ],
-                            [
-                            "list_id"=> "23",
-                            "price"=> "2003",
-                            "work"=> "Repairing3"
-                            ]
-                        ],
-                    ],
-                    [
-                        "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
-                        "workerName"=>"Worker Name4",
-                        "Work"=>"Work Name4",
-                        "title"=>"Title4",
-                        "message"=>"Message4",
-                        "workPorgressStatus"=>2,
-                        "billList"=>[
-                            [
-                            "list_id"=> "14",
-                            "price"=> "504",
-                            "work"=> "Condencer4"
-                            ],
-                            [
-                            "list_id"=> "24",
-                            "price"=> "2004",
-                            "work"=> "Repairing4"
-                            ]
-                        ],
-                    ],
+                        [
+                        "list_id"=> "21",
+                        "price"=> "2001",
+                        "work"=> "Repairing1"
+                        ]
+                    ]
                 ];
 
-        return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$wor_serviceManPorifleID],$this->successStatus);
+                $billList = [];
+                $decoded_billList = json_decode($value->billList);
+                foreach ($decoded_billList as $key => $value) {
+                    $temp_arr = [];
+                    $temp_arr['list_id'] = $value->list_id;
+                    $temp_arr['price'] = $value->price;
+                    $temp_arr['work'] = $value->work;
+                    array_push($billList, $temp_arr);
+                }
+                $dataSingle['billList'] = $billList;
+
+                array_push($data, $dataSingle);
+          }
+
+
+        return response()->json(['received'=>'yes','data'=>$data,'return_test'=>$customerID],$this->successStatus);
     }
 }

@@ -10,6 +10,11 @@ Route::post('AvilPhone_MU', 'API\Groceries\LoginSignUP@avilPhone');
 Route::post('send_OTP_MU', 'API\Groceries\LoginSignUP@send_OTP_fun');
 Route::post('change_password_MU', 'API\Groceries\LoginSignUP@change_password_fun');
 
+// save profle data
+Route::post('render_setBasicProfile_MU', 'API\Groceries\profile_CUS@setProfileBasicDetails');
+Route::post('render_setShippingAddress_MU', 'API\Groceries\profile_CUS@setProfileShippingDetails');
+
+
 
 
 
