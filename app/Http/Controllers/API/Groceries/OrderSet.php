@@ -10,39 +10,39 @@ class OrderSet extends Controller
     //get request
     public function getRequestOrderValue(Request $request)
     {
-        
+       // echo "Real price ".$request->realPrice;
       $cartID = DB::table('gro_cart_tab')
-            ->insertGetId(['real_amt'=>$request->real_Price,
-						   'offer_amt'=>$request->Offer_Price,
-						   'Customer_info_id'=>$request->customerID,
+            ->insertGetId(['real_amt'=>$request->realPrice,
+						   'offer_amt'=>$request->offer,
+						   'Customer_info_id'=>$request->cid,
 						   'status'=>0,
-						   'paid_amt'=>$request->paid_amt,
-						   'order_address'=>$request->Order_address,
-						   'gro_shop_info_id'=>$request->gro_shop_ID]);
+						   'paid_amt'=>$request->topay,
+						   'order_address'=>$request->address,
+						   'gro_shop_info_id'=>$request->shop]);
 
       //  var_dump($value);
         $mainArray = array();
 
-        foreach ($request->Item as $value) 
+        foreach ($request->Order as $value) 
         {
            // var_dump($value);
            $secandArray = array();
            $secandArray['gro_cart_id'] = $cartID;
-           $secandArray['gro_quantity'] = $value['qua'];
-           $secandArray['real_price'] = $value['real_Price'];
-           $secandArray['offer_price'] = $value['offer_price'];
-           $secandArray['gro_map_id'] = $value['map_id'];
+           $secandArray['gro_quantity'] = $value['Quantity'];
+           $secandArray['real_price'] = $value['price'];
+           $secandArray['offer_price'] = $value['offer'];
+           $secandArray['gro_map_id'] = $value['map'];
            $secandArray['order_status']=0;
-		   $secandArray['gro_product_shop_id']=$value['gro_product_shop_id'];
+		   $secandArray['gro_product_shop_id']=$value['spid'];
            array_push($mainArray,$secandArray);
         }
          $orderIDs = DB::table('gro_order_tab')
             ->insert($mainArray);
        
         if($orderIDs)
-			return response()->json(['data' => "true"]);
+			return response()->json(['received' => "yes"]);
 		else 
-			return response()->json(['data' => "false"]);
+			return response()->json(['received' => "false"]);
 	
     }
 
