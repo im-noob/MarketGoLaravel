@@ -11,94 +11,65 @@ use Illuminate\Support\Facades\DB;
 class Testing extends Controller
 {
     function test(){
-        // $customerID = '79';
+        $searchText = "Dhoop";
+         $searchTerm = explode(" ",$searchText);  
 
-        // $data = [
-        //             [
-        //                 "workerAvtar"=>"https://i.imgur.com/uj2JaPH.jpg",
-        //                 "workerName"=>"Worker Name1",
-        //                 "Work"=>"Work Name1",
-        //                 "title"=>"Title1",
-        //                 "message"=>"Message1",
-        //                 "workPorgressStatus"=>5,
-        //                 "billList"=>[
-        //                     [
-        //                     "list_id"=> "11",
-        //                     "price"=> "501",
-        //                     "work"=> "Condencer1"
-        //                     ],
-        //                     [
-        //                     "list_id"=> "21",
-        //                     "price"=> "2001",
-        //                     "work"=> "Repairing1"
-        //                     ]
-        //                 ],
-        //             ],   
-        //         ];
+        $groItems = [];
+        $resItems = [];
+        $serItems = [];
 
-        // $wor_order_tab = DB::table('wor_order_tab')
-        //           ->join('wor_info_tab','wor_info_tab.wor_info_id','=','wor_order_tab.wor_info_id')
-        //           ->join('wor_subcat_tab','wor_subcat_tab.wor_subcat_id','=','wor_order_tab.wor_subcat_id')
-        //           ->select(
-        //             'wor_info_tab.pic as workerAvtar',
-        //             'wor_info_tab.name as workerName', 
-        //             'wor_subcat_tab.subcat_name as Work', 
-        //             'title',  
-        //             'message',
-        //             'workPorgressStatus',
-        //             'bill_list as billList'
-                    
-        //           )
-        //           ->where('customer_info_Id', '=', $customerID)
-        //           ->get();
+        $groItemsID = [];
+        $resItemsID = [];
+        $serItemsID = [];
 
-        // $data = [];
-        // foreach ($wor_order_tab as $key => $value) {
-        //     $dataSingle = [
-        //             "workerAvtar"=>$value->workerAvtar,
-        //             "workerName"=>$value->workerName,
-        //             "Work"=>$value->Work,
-        //             "title"=>$value->title,
-        //             "message"=>$value->message,
-        //             "workPorgressStatus"=>$value->workPorgressStatus,
-        //             "billList"=>[
-        //                 [
-        //                 "list_id"=> "11",
-        //                 "price"=> "501",
-        //                 "work"=> "Condencer1"
-        //                 ],
-        //                 [
-        //                 "list_id"=> "21",
-        //                 "price"=> "2001",
-        //                 "work"=> "Repairing1"
-        //                 ]
-        //             ]
-        //         ];
-        //             $temp_arr = [];//simply decode the json and and perare bill list of nested aaray 
-        //             $decoded_billList = json_decode($value->billList);
-        //             foreach ($decoded_billList as $key => $value) {
-        //                 $temp_arr['list_id'] = $value->list_id;
-        //                 $temp_arr['price'] = $value->price;
-        //                 $temp_arr['work'] = $value->work;
-        //             }
-        //             $dataSingle['billList'] = $temp_arr;
-        //         array_push($data, $dataSingle);
-        //   }
+
+        foreach ($searchTerm as $key => $value) {
+            // Grocery Result
+            $gro_data = DB::table('gro_product_list_tab')
+                ->select('gro_product_list_id')
+                ->where('TAGS', 'like', '%'.$value.'%')
+                // ->where('TAGS', 'like', $value)
+
+                ->limit(100)
+                ->get();
+            // var_dump($gro_data);
+            foreach ($gro_data as $key => $value) {
+                array_push($groItemsID, $value->gro_product_list_id);
+            }
+
+            // Resturent Searchs
+
+            // Service Search
+        }
 
 
 
-        $billList = "BillList";
-        $order_id = '5';
-        
-        DB::table('wor_order_tab')
-            ->where('wor_order_id', $order_id)
-            ->update(['bill_list' => $billList]);
+        $groItems = $this->productGet($groItemsID);
 
-        // echo "\n";
-        // $json = response()->json($data);
-        // echo "\n\n";
-        // var_dump($json->original);
+
+
+        echo "\n";
+        $json = response()->json($groItems);
+        echo "\n\n";
+        var_dump($json->original);
         // echo "\n\n";
         // echo "$json";
       }
+
+
+    
+    public function productGet($groItemsID)
+    {
+        $data = DB::table('gro_product_shop_tab As shop')
+                ->join("unit_tab", "unit_tab.unit_id","=","shop.unit_id")
+                ->join("gro_map_tab As map", "map.gro_map_id","=","shop.gro_map_id")
+                ->join('gro_product_list_tab As gpl','gpl.gro_product_list_id','=','map.gro_produt_list_id')
+                ->select('shop.gro_product_shop_id as psid','gpl.gro_product_name As name','shop.inStock as stock','map.gro_cat_id as cid','shop.gro_price as price','shop.quantity','shop.gro_map_id as mid','gpl.gro_product_list_id as plid','gpl.gro_product_info as pinfo','gpl.pic','unit_tab.unit_name')
+                ->whereIn('gpl.gro_product_list_id', $groItemsID)
+                ->orderBy('gpl.gro_product_name')
+                ->get();
+
+        return $data;     
+    }
+    
 }
