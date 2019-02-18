@@ -64,7 +64,7 @@ class ShopController extends Controller
 				->join("unit_tab", "unit_tab.unit_id","=","shop.unit_id")
 				->join("gro_map_tab As map", "map.gro_map_id","=","shop.gro_map_id")
 				->join('gro_product_list_tab As gpl','gpl.gro_product_list_id','=','map.gro_produt_list_id')
-				->select('shop.gro_product_shop_id as psid','gpl.gro_product_name As name','shop.inStock as stock','map.gro_cat_id as cid','shop.gro_price as price','shop.quantity','shop.gro_map_id as mid','gpl.gro_product_list_id as plid','gpl.gro_product_info as pinfo','gpl.pic','unit_tab.unit_name')
+				->select('shop.gro_product_shop_id as psid','gpl.gro_product_name As name','shop.inStock as stock','map.gro_cat_id as cid','shop.gro_price as price','shop.quantity','shop.gro_map_id as mid','gpl.gro_product_list_id as plid','gpl.gro_product_info as pinfo','gpl.pic','unit_tab.unit_name as unit')
 				->where([["shop.gro_shop_info_id","=",$shopID],['map.gro_subcat_id','=',$value]])
 				->orderBy('map.gro_map_id')
 				->get();
