@@ -97,15 +97,6 @@ class UserController extends Controller
                 $data = "NOt Configure your controller in user controller line no 83";
             }
 
-
-
-
-
-
-
-
-
-
             return response()->json(['success' => $success,'profileData' => $data,'userID'=>$wor_info_id[0]->id,'status' => 'valid'], $this-> successStatus);
             
         } 
