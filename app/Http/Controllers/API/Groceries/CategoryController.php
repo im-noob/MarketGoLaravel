@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     public function categoryGet()
-    {
-	
+    {	
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")

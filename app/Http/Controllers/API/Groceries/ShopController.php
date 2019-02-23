@@ -72,34 +72,59 @@ class ShopController extends Controller
 		return response()->json(['data' => $data]);		
     }
 	
+	/** price data*/
+	public function shopPriceProduct(Request $request)
+	{
+		$returnData = array();
+		 $shopDatas = DB::table('gro_shop_info_tab')
+		->join('users','gro_shop_info_tab.user_id','=','users.id')
+					  
+		->select('users.noti_token',"gro_shop_info_tab.*")
+		->where("gro_shop_info_tab.visiblilty","=",1)
+		->orderBy('gro_shop_info_tab.gro_shop_info_id')
+		->simplePaginate(20);
+		
+		foreach($shopDatas as $shopData)
+		{
+			//array['ShopData']=$shopData;
+			//$request["Shopid"] = shopData["gro_shop_info_id"];
+			//echo $shopData->gro_shop_info_id;
+			var_dump($request);
+			//this->productPriceGet($request);
+		}
+		
+		
+	}
+	
 	/** Product  price */
 	public function productPriceGet(Request $request)
     {
-         $values=$request->id;
+        $values=$request->id;
 		$shopID=$request->Shopid;
 		//var_dump($request->id);
 		$totalProductmap=array();
 		$totalProductQuantity=array();
-		foreach($values as $value){
+		$shopArray =array();
+		array_push($shopArray,$shopID);
+		array_push($shopArray,5);
+		foreach($values as $value)
+		{
 		  array_push($totalProductmap,$value["map"]);
 		  array_push($totalProductQuantity,$value["size"]);
 		 // var_dump($value["quantity"]);
 		}
 		//var_dump($shopID);
-	$datas = DB::table('gro_product_shop_tab')
-		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
-		->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
-
-		->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
-	   ->select('gro_product_list_tab.gro_product_name as title','gro_map_tab.gro_cat_id as mapcid','gro_product_shop_tab.gro_shop_info_id as shopID','gro_product_shop_tab.offer as offer','gro_product_shop_tab.gro_price as price','gro_product_shop_tab.quantity as size','gro_product_shop_tab.gro_product_shop_id as spid','gro_product_shop_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as pid','gro_product_list_tab.gro_product_info as info','gro_product_list_tab.pic as pic','unit_tab.unit_name as unit')
-
-		->where("gro_product_shop_tab.gro_shop_info_id","=",$shopID)
-        ->whereIn('gro_product_shop_tab.gro_map_id',$totalProductmap)
-		
-        ->distinct()
-
-		->orderBy('mapcid')
-		->simplePaginate(20);
+		$datas = DB::table('gro_product_shop_tab')
+			->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
+			->join('gro_product_list_tab','gro_product_list_tab.gro_product_list_id','=','gro_map_tab.gro_produt_list_id')
+			->join("unit_tab", "unit_tab.unit_id","=","gro_product_shop_tab.unit_id")
+			->select('gro_product_list_tab.gro_product_name as title','gro_map_tab.gro_cat_id as mapcid','gro_product_shop_tab.gro_shop_info_id as shopID','gro_product_shop_tab.offer as offer','gro_product_shop_tab.gro_price as price','gro_product_shop_tab.quantity as size','gro_product_shop_tab.gro_product_shop_id as spid','gro_product_shop_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as pid','gro_product_list_tab.gro_product_info as info','gro_product_list_tab.pic as pic','unit_tab.unit_name as unit')
+			//->where([["gro_product_shop_tab.gro_shop_info_id","=",$shopID],["gro_product_shop_tab.gro_shop_info_i","=",5]])
+			->where('gro_product_shop_tab.gro_shop_info_id',"=",$shopID)
+			->whereIn('gro_product_shop_tab.gro_map_id',$totalProductmap)
+			->distinct()
+			->orderBy('mapcid')
+			->simplePaginate(20);
 		// ->whereIn([['gro_product_shop_tab.gro_map_id','=',$totalProductmap],['gro_product_shop_tab.quantity','=',$totalProductQuantity],["gro_product_shop_tab.gro_shop_info_id","=",$shopID]])
       // var_dump($datas);
 	   $price=0;
@@ -120,7 +145,7 @@ class ShopController extends Controller
 		}
 
 		
-       // var_dump($returnArray);
-       return response()->json(['data' => $returnArray,'price'=>$price,'received'=>'yes']);
+      var_dump($returnArray);
+      // return response()->json(['data' => $returnArray,'price'=>$price,'received'=>'yes']);
     }
 }
