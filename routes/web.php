@@ -18,3 +18,21 @@ Route::get('/', function () {
 
 
 Route::get('/test','Testing@test');
+
+
+
+
+
+Route::get('/payu',function(){
+	return view('payu');
+});
+
+
+
+
+
+// payment
+Route::post('/PaymentStatus','API\MarketS\payuPayment@payment_success_fail');
+Route::get('/payment_getway','API\MarketS\payuPayment@openPaymentGateway');
+
+
