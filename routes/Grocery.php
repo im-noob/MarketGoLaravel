@@ -17,8 +17,8 @@
 	Route::post('Grocery/Shop/sub','API\Groceries\ShopController@subCategoryGet');
 	Route::post('Grocery/Shop/productList','API\Groceries\ShopController@productGet');
 	Route::get('Grocery/Shop/List','API\Groceries\ShopController@shopInfoGet');
-//Route::post('Grocery/Shop/product/price','API\Groceries\ShopController@productPriceGet');shopPriceProduct
-	Route::post('Grocery/Shop/product/price','API\Groceries\ShopController@shopPriceProduct');
+	Route::post('Grocery/Shop/product/price','API\Groceries\ShopController@productPriceGet');//shopPriceProduct
+	Route::post('Grocery/Shop/product/p','API\Groceries\ShopController@shopPriceProduct');
 
 	Route::post('loginGR', 'API\Groceries\Authentication@login'); 
 	Route::post('registerGR', 'API\Groceries\Authentication@register');
