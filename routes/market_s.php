@@ -13,6 +13,8 @@ Route::post('change_password_MU', 'API\Groceries\LoginSignUP@change_password_fun
 
 
 
+
+
 Route::group(['middleware' => 'auth:api'], function(){
 	
 	// save profle data
@@ -43,7 +45,9 @@ Route::group(['middleware' => 'auth:api'], function(){
 
 
 
-
+// payment
+Route::post('/PaymentStatus','API\MarketS\payuPayment@payment_success_fail');
+Route::get('/payment_getway','API\MarketS\payuPayment@openPaymentGateway');
 
 
 
