@@ -18,6 +18,7 @@ class SearchController extends Controller
         $groItems = [];
         $resItems = [];
         $serItems = [];
+        $shopItems = [];
 
         $groItemsID = [];
         $resItemsID = [];
@@ -39,17 +40,37 @@ class SearchController extends Controller
                 array_push($groItemsID, $value->gro_product_list_id);
             }
 
+            
             // Resturent Searchs
 
             // Service Search
         }
-
+        $shopItems = $this->shopInfoGet($searchText);
 
 
         $groItems = $this->productGet($groItemsID);
-		return response()->json(['data' => $groItems,'received' => 'yes','back'=>$searchText]);
+		return response()->json([
+            'gro_data' => $groItems,
+            'shop_data' => $shopItems,
+            'received' => 'yes',
+            'back'=>$searchText]);
     }
 
+
+    public function shopInfoGet($searchText)
+    {
+        $data = DB::table('gro_shop_info_tab')
+        ->join('users','gro_shop_info_tab.user_id','=','users.id')
+                      
+        ->select('users.noti_token',"gro_shop_info_tab.*")
+        ->where("gro_shop_info_tab.visiblilty","=",1)
+        ->where("gro_shop_info_tab.name","like",'%'.$searchText.'%')
+        ->orderBy('gro_shop_info_tab.gro_shop_info_id')
+        ->limit(3)
+        ->simplePaginate(10);
+
+        return($data);
+    }
 
     public function productGet($groItemsID)
     {
