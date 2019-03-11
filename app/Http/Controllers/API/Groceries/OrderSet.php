@@ -101,26 +101,31 @@ class OrderSet extends Controller
 	public function getRecentListItem(Request $request)
     {
 	/**
-		select `gro_order_tab`.`gro_order_id`, `gro_order_tab`.`gro_cart_id`, `gro_order_tab`.`gro_quantity`, `gro_order_tab`.`real_price`, 
+select DISTINCT `gro_order_tab`.`gro_order_id`, `gro_order_tab`.`gro_cart_id`, `gro_order_tab`.`gro_quantity`, `gro_order_tab`.`real_price`, 
 `gro_order_tab`.`offer_price`, `gro_order_tab`.`gro_map_id`, `gro_order_tab`.`gro_product_shop_id`, `gro_order_tab`.`order_status`, 
-`gro_order_tab`.`created_at`, `gro_product_list_tab`.`gro_product_name`, `gro_map_tab`.`gro_cat_id`, `gro_map_tab`.`quantity`, 
+`gro_order_tab`.`created_at`, `gro_product_list_tab`.`gro_product_name`, `gro_map_tab`.`gro_cat_id`, `gro_map_tab`.`quantity`, `unit_tab`.`unit_name`,
 `gro_map_tab`.`gro_map_id`, `gro_product_list_tab`.`gro_product_list_id`, `gro_product_list_tab`.`gro_product_info`, `gro_product_list_tab`.`pic`
  from `gro_order_tab`
  inner join `gro_map_tab` on `gro_map_tab`.`gro_map_id` = `gro_order_tab`.`gro_map_id`
  inner join `gro_product_list_tab` on `gro_product_list_tab`.`gro_product_list_id` = `gro_map_tab`.`gro_produt_list_id`
  inner join `gro_cart_tab` on `gro_cart_tab`.`gro_cart_id` = `gro_order_tab`.`gro_cart_id`
- where `gro_cart_tab`.`customer_info_id` = 120 order by `gro_order_tab`.`created_at` asc limit 201 offset 0*/
+ inner join `gro_product_shop_tab` on `gro_product_shop_tab`.`gro_map_id` = `gro_map_tab`.`gro_map_id`
+ inner join `unit_tab` on `gro_product_shop_tab`.`unit_id` = `unit_tab`.`unit_id`
+ where `gro_cart_tab`.`customer_info_id` = 120 order by `gro_order_tab`.`created_at` asc limit 201 offset 0
+ */
 	
        $data = DB::table('gro_order_tab')
 		->JOIN("gro_map_tab","gro_map_tab.gro_map_id", "=" ,"gro_order_tab.gro_map_id")
 		->JOIN("gro_product_list_tab","gro_product_list_tab.gro_product_list_id","=","gro_map_tab.gro_produt_list_id")
 		->JOIN("gro_cart_tab","gro_cart_tab.gro_cart_id","=","gro_order_tab.gro_cart_id")
+		->JOIN("gro_product_shop_tab","gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
+		->JOIN("unit_tab","gro_product_shop_tab.unit_id","=","unit_tab.unit_id")
 		->select("gro_order_tab.gro_product_shop_id as psid", "gro_order_tab.created_at as c",
-		'gro_product_list_tab.gro_product_name as title'
-		,'gro_map_tab.gro_cat_id as cid',
-				'gro_map_tab.quantity as size','gro_map_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as plid',
-				'gro_product_list_tab.gro_product_info as pinfo','gro_product_list_tab.pic')
+		'gro_product_list_tab.gro_product_name as title','gro_map_tab.gro_cat_id as cid','gro_map_tab.quantity as size',
+		'gro_map_tab.gro_map_id as map','gro_product_list_tab.gro_product_list_id as plid',
+				'gro_product_list_tab.gro_product_info as pinfo','gro_product_list_tab.pic','unit_tab.unit_name as unit')
 		->where("gro_cart_tab.customer_info_id","=",$request->userID)
+		->distinct()
 		->orderBy("c")->simplePaginate(200);
 		 
 		 $freshArray =array();
@@ -128,7 +133,7 @@ class OrderSet extends Controller
 		 foreach($data as $da)
 		 {
 			 $i=0;
-			 $da->flag=true;
+			 $da->flag=false;
 			 $da->Quantity=1;
 			// var_dump($da);
 			 foreach($freshArray as $fresh)
