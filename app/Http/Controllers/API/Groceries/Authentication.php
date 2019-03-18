@@ -79,7 +79,7 @@ class Authentication extends Controller
                         "DCharge"=>$shop_info_tab[0]->DCharge,
                         "pic"=>$shop_info_tab[0]->pic,
                         "Pin_Code"=>$shop_info_tab[0]->Pin_Code,
-                	];
+                	 ];
              }
 
 			       else{
