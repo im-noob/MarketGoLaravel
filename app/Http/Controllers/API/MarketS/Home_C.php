@@ -15,12 +15,13 @@ class Home_C extends Controller
         $incoming_data_arr = DB::table('wor_order_tab')
             ->join('wor_subcat_tab', 'wor_order_tab.wor_subcat_id', '=', 'wor_subcat_tab.wor_subcat_id')
             ->join('users', 'wor_order_tab.customer_info_Id', '=', 'users.id')
-            ->select('title','users.phone as contactNo','wor_subcat_tab.subcat_name as work_type','wor_order_tab.created_at as date','message')
+            ->select('wor_order_id','title','users.phone as contactNo','wor_subcat_tab.subcat_name as work_type','wor_order_tab.created_at as date','message')
             ->where('wor_info_id', $userID)
             ->get();
         $send_arr = [];
         foreach ($incoming_data_arr as $key => $value) {
           $arrRow = [
+                'order_id'=>$value->wor_order_id,
                 'title'=>$value->title,
                 "contactNo"=>$value->contactNo,
                 'work_type' =>$value->work_type,
@@ -38,6 +39,14 @@ class Home_C extends Controller
     //for sacing bill
     function sendBill(Request $request){
         $request_data = $request->json()->all();
+        $billList = $request_data['BillList'];
+        $order_id = $request_data['order_id'];
+        
+        DB::table('wor_order_tab')
+            ->where('wor_order_id', $order_id)
+            ->update(['bill_list' => $billList]);
+
+
         return response()->json(['success' => "yes",'verify'=>$request_data], $this-> successStatus);  
     }
 }

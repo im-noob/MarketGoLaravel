@@ -22,6 +22,7 @@ include_once(__DIR__.'/Services.php');
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+Route::post('filter', 'FiltersController@filter'); 
 
 Route::post('login', 'API\MarketS\UserController@login'); 
 Route::post('register', 'API\MarketS\UserController@register');

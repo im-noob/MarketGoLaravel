@@ -30,7 +30,7 @@ class LoginSignUP extends Controller
 
             if($user_type == 'user'){
                 //featching profile data 
-                $profileData = $this->gerProfileData($userID);
+                $profileData = $this->gerProfileData($userID,$wor_info_id[0]->phone,$email);
                
               
             }else if($user_type == 'worker'){
@@ -53,7 +53,7 @@ class LoginSignUP extends Controller
     }
 
 
-    function gerProfileData($id){
+    function gerProfileData($id,$phone,$email){
         $profileData = DB::table('customer_info_tab')->select('customer_info_id','cname','state','city','location','address','pic','cpin','user_id')
                       ->where('user_id', '=', $id)
                       ->get();
@@ -66,6 +66,8 @@ class LoginSignUP extends Controller
         $profileData['pic'] = $profileData[0]->pic;
         $profileData['cpin'] = $profileData[0]->cpin;
         $profileData['user_id'] = $profileData[0]->user_id;
+        $profileData['phone'] = $phone;
+        $profileData['email'] = $email;
 
         return($profileData);
     }
@@ -83,13 +85,12 @@ class LoginSignUP extends Controller
         // saving login data to user table 
 
         $validator = Validator::make($request->json()->all(),[ 
-            'name' => 'required', 
             'email' => 'required|email', 
             'password' => 'required', 
             'c_password' => 'required|same:password', 
             'phone' => 'required|numeric',
         ]);
-		
+		    
         if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 401);            
         }
@@ -105,7 +106,7 @@ class LoginSignUP extends Controller
 
 
         //fetching user id of the inserted data in users table 
-        $wor_info_id = DB::table('users')->select('id')
+        $wor_info_id = DB::table('users')->select('id','phone')
                         ->where('email', '=', $email)
                         ->get();
         $userID = $wor_info_id[0]->id; 
@@ -127,7 +128,7 @@ class LoginSignUP extends Controller
             );
 
             //featching profile data 
-                $profileData = $this->gerProfileData($userID);
+                $profileData = $this->gerProfileData($userID,$wor_info_id[0]->phone,$email);
 
         }else if($user_type != 'worker'){
             $data = "Configure your controller in user controller line no 83";

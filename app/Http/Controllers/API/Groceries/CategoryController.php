@@ -8,19 +8,18 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     public function categoryGet()
-    {
-	
+    {	
 	 $data = DB::table('gro_product_shop_tab')
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		->join("gro_cat_tab","gro_map_tab.gro_cat_id","=","gro_cat_tab.gro_cat_id")
 		->join("gro_shop_info_tab","gro_shop_info_tab.gro_shop_info_id","=","gro_product_shop_tab.gro_shop_info_id")
-		->select("gro_cat_tab.gro_cat_id","gro_cat_tab.gro_cat_name","gro_cat_tab.pic")
+		->select("gro_cat_tab.gro_cat_id as mapcid","gro_cat_tab.gro_cat_name as title","gro_cat_tab.pic as pic")
 		->where("gro_shop_info_tab.visiblilty","=",1)
 		->distinct()
-		->orderBy('gro_cat_id')
+		->orderBy('mapcid')
 		->simplePaginate(20);
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,"received" =>"yes"]);
     }
 	
 	 public function category_subGet()
@@ -50,12 +49,12 @@ class CategoryController extends Controller
 		->join("gro_map_tab", "gro_product_shop_tab.gro_map_id","=","gro_map_tab.gro_map_id")
 		 ->join('gro_subcat_tab','gro_subcat_tab.gro_subcat_id','=','gro_map_tab.gro_subcat_id')
 		 ->join("gro_shop_info_tab","gro_shop_info_tab.gro_shop_info_id","=","gro_product_shop_tab.gro_shop_info_id")
-		 ->select('gro_subcat_tab.subcat_name','gro_subcat_tab.pic','gro_subcat_tab.gro_subcat_id')              
+		 ->select('gro_subcat_tab.subcat_name as title','gro_subcat_tab.pic as pic','gro_subcat_tab.gro_subcat_id as mapsid')              
 		->where([['gro_map_tab.gro_cat_id','=',$value],["gro_shop_info_tab.visiblilty","=",1]])
 		->distinct()
 		->simplePaginate(20);
 		
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data,"received" =>"yes"]);
     }
 
 	

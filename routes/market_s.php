@@ -50,6 +50,45 @@ Route::group(['middleware' => 'auth:api'], function(){
 
 
 
+
+Route::group(['middleware' => 'auth:api'], function(){
+	
+	// save profle data
+	Route::post('render_setBasicProfile_MU', 'API\Groceries\profile_CUS@setProfileBasicDetails');
+	Route::post('render_setShippingAddress_MU', 'API\Groceries\profile_CUS@setProfileShippingDetails');
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// payment
+Route::post('/PaymentStatus','API\MarketS\payuPayment@payment_success_fail');
+Route::get('/payment_getway','API\MarketS\payuPayment@openPaymentGateway');
+
+
+
+
+
 /****** market s ***/
 
 
