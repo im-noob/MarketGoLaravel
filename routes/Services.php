@@ -12,4 +12,12 @@
 	// history section
 	Route::post('render_userServiceHist_US','API\Service\ServicesController@ServiceHistory_get');
 	//
+	
+	
+	
+	Route::post('filterS', 'API\MarketS\FielterServicesController@filter'); 
+	Route::post('getCatHW', 'API\MarketS\FielterServicesController@returnCat'); 
+	Route::post('getSubCatHW', 'API\MarketS\FielterServicesController@returnSubCat'); 
+	Route::post('getDescHW', 'API\MarketS\FielterServicesController@returnDesc');
+
  ?>

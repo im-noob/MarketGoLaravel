@@ -11,6 +11,42 @@ Route::post('send_OTP_MU', 'API\Groceries\LoginSignUP@send_OTP_fun');
 Route::post('change_password_MU', 'API\Groceries\LoginSignUP@change_password_fun');
 
 
+Route::get('getAllUser','API\Service\AdminController@getUser');
+
+
+Route::group(['middleware' => 'auth:api'], function(){
+	
+	// save profle data
+	Route::post('render_setBasicProfile_MU', 'API\Groceries\profile_CUS@setProfileBasicDetails');
+	Route::post('render_setShippingAddress_MU', 'API\Groceries\profile_CUS@setProfileShippingDetails');
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
