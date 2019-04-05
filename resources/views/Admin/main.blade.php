@@ -18,12 +18,16 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{{url('/')}}/demo/demo.css" rel="stylesheet" />
 
+
   <!--   Core JS Files   -->
   <script src="{{url('/')}}/js/core/jquery.min.js"></script>
   <script src="{{url('/')}}/js/core/popper.min.js"></script>
   <script src="{{url('/')}}/js/core/bootstrap-material-design.min.js"></script>
   <script src="{{url('/')}}/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  <script src="{{url('/')}}/js/material-dashboard.js?v=2.1.1" type="text/javascript"></script>
+  <script src="{{url('/')}}/js/plugins/bootstrap-selectpicker.js" type="text/javascript"></script>
+  
 </head>
 
 <body class="">
@@ -53,6 +57,12 @@
               <p>User List</p>
             </a>
           </li>
+          <li class="nav-item " id="category">
+            <a class="nav-link" href="{{url('/admin/Ctegory')}}">
+              <i class="material-icons">list</i>
+              <p>Category</p>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -61,7 +71,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#pablo">Dashboard</a>
+            <a class="navbar-brand" href="{{url('/admin/Dashboard')}}">Dashboard</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -72,7 +82,7 @@
           <div class="collapse navbar-collapse justify-content-end">
             <form class="navbar-form">
               <div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
+                <input type="text" value="" class="form-control" placeholder="Search..." />
                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
                   <i class="material-icons">search</i>
                   <div class="ripple-container"></div>
@@ -81,7 +91,7 @@
             </form>
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#pablo">
+                <a class="nav-link" href="{{url('/admin/Dashboard')}}">
                   <i class="material-icons">dashboard</i>
                   <p class="d-lg-none d-md-block">
                     Stats
@@ -126,6 +136,7 @@
       @yield('dashboardBody')
       @yield('User')
       @yield('login')
+      @yield('Category')
 
       <!-- <footer class="footer">
         <div class="container-fluid">
@@ -174,7 +185,7 @@
   <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
   <script src="{{url('/')}}/js/plugins/jquery.bootstrap-wizard.js"></script>
   <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-  <script src="{{url('/')}}/js/plugins/bootstrap-selectpicker.js"></script>
+  
   <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
   <script src="{{url('/')}}/js/plugins/bootstrap-datetimepicker.min.js"></script>
   <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
@@ -197,10 +208,7 @@
   <script src="{{url('/')}}/js/plugins/chartist.min.js"></script>
   <!--  Notifications Plugin    -->
   <script src="{{url('/')}}/js/plugins/bootstrap-notify.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="{{url('/')}}/js/material-dashboard.js?v=2.1.1" type="text/javascript"></script>
-  <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-  <script src="{{url('/')}}/demo/demo.js"></script>
+  
   <script>
     $(document).ready(function() {
       $().ready(function() {
@@ -370,13 +378,6 @@
 
         });
       });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in ../public/js/demos.js
-      md.initDashboardPageCharts();
-
     });
   </script>
 </body>
